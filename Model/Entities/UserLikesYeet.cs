@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Model.Entities;
 
 [Table("USER_LIKES_YEETS_JT")]
-public class UserLikedYeet
+public class UserLikesYeet
 { 
     [Column("USER_ID"), Required]
     public int UserId { get; set; }

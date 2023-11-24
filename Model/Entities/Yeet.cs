@@ -7,8 +7,7 @@ namespace Model.Entities;
 [Table("YEETS")]
 public class Yeet
 {
-    [Column("YEET_ID")]
-    [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Key,Column("ID"),DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     
     [Column("BODY"),DataType(DataType.Text),Required]

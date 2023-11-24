@@ -6,7 +6,7 @@ namespace Model.Entities;
 
 
 [Table("USER_FOLLOWS_USERS_JT")]
-public class UserHasFriend
+public class UserFollowsUser
 {
     [Column("Slave"),Required]
     public int SlaveId { get; set; }
