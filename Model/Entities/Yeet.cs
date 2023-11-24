@@ -4,16 +4,16 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace Model.Entities;
 
-[Table("YEETS")]
+[Table("yeets")]
 public class Yeet
 {
-    [Key,Column("ID"),DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Key,Column("yeet_id"),DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     
-    [Column("BODY"),DataType(DataType.Text),Required]
+    [Column("body"),DataType(DataType.Text),Required]
     public string Body { get; set; }
     
-    [Column("UserId"), Required]
+    [Column("user_id"), Required]
     public int UserId { get; set; }
     public User User { get; set; }
 }

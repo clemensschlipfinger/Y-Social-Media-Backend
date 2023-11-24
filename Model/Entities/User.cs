@@ -3,23 +3,23 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Model.Entities;
 
-[Table("USERS")]
+[Table("users")]
 public class User
 {
-   [Column("USER_ID")]
+   [Column("user_id")]
    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
    public int Id { get; set; } 
    
-   [Column("USERNAME"), Required]
+   [Column("username"), Required]
    public string Username { get; set; } 
    
-   [Column("FIRST_NAME"),Required]
+   [Column("first_name"),Required]
    public string FirstName { get; set; } 
    
-   [Column("LAST_NAME"),Required]
+   [Column("last_name"),Required]
    public string LastName { get; set; } 
    
-   [Column("PASSWORD_HASH"),Required]
+   [Column("password_hash"),Required]
    public string PasswordHash { get; set; }
     
 }

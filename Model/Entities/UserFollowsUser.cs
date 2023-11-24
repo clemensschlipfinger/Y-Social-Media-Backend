@@ -5,14 +5,14 @@ using System.Runtime.InteropServices.Marshalling;
 namespace Model.Entities;
 
 
-[Table("USER_FOLLOWS_USERS_JT")]
+[Table("user_follows_users_jt")]
 public class UserFollowsUser
 {
-    [Column("Slave"),Required]
+    [Column("slave_id"),Required]
     public int SlaveId { get; set; }
     public User Slave { get; set; }
     
-    [Column("MASTER"),Required]
+    [Column("master_id"),Required]
     public int MasterId { get; set; }
     public User Master { get; set; }
 }

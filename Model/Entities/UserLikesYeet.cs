@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Model.Entities;
 
-[Table("USER_LIKES_YEETS_JT")]
+[Table("user_likes_yeets_jt")]
 public class UserLikesYeet
 { 
-    [Column("USER_ID"), Required]
+    [Column("user_id"), Required]
     public int UserId { get; set; }
     public User User { get; set; }
     
-    [Column("YEET_ID"), Required]
+    [Column("yeet_id"), Required]
     public int YeetId { get; set; }
     public Yeet Yeet { get; set; }
 }
