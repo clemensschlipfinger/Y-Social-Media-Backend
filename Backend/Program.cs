@@ -1,4 +1,5 @@
 using System.Text;
+using Backend.Graphql.Mutations;
 using Backend.Identity;
 using Backend.Identity.Policies;
 using Domain.Repositories.Implementations;
@@ -20,6 +21,8 @@ builder.Services.AddDbContextFactory<YDbContext>(
 );
 
 builder.Services.AddScoped<IYeetRepository, YeetRepository>();
+builder.Services.AddScoped<IUserFollowsRepository, UserFollowsRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
 var jwtOptionsSection = builder.Configuration.GetRequiredSection("Jwt");
@@ -63,6 +66,7 @@ builder.Services.AddControllers();
 builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
+    .AddMutationType<Mutation>()
     .AddQueryType<Query>();
 
 var app = builder.Build();
