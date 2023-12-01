@@ -1,10 +1,15 @@
 using System.Text;
 using Backend.Identity;
 using Backend.Identity.Policies;
+using Domain.Repositories.Implementations;
+using Domain.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.IdentityModel.Tokens;
 using Model.Configuration;
+using Model.Entities;
+using TestGraphql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +18,8 @@ builder.Services.AddDbContextFactory<YDbContext>(
         builder.Configuration.GetConnectionString("DefaultConnection") 
     )
 );
+
+builder.Services.AddScoped<IYeetRepository, YeetRepository>();
 
 
 var jwtOptionsSection = builder.Configuration.GetRequiredSection("Jwt");
@@ -55,8 +62,8 @@ builder.Services.AddControllers();
 
 builder.Services
     .AddGraphQLServer()
-    .AddAuthorization();
-    //.AddQueryType<Query>();
+    .AddAuthorization()
+    .AddQueryType<Query>();
 
 var app = builder.Build();
 app.UseRouting();
