@@ -1,4 +1,6 @@
+using Backend.Identity;
 using Domain.Repositories.Implementations;
+using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;
 using Model.Entities;
 
@@ -44,7 +46,7 @@ public class Mutation
 
     [Error(typeof(UsernameAlreadyTakenException))]
     [Error(typeof(PasswordTooShortException))]
-    public async Task<User> UserRegistration(string username, string firstname, string lastname, string password,
+    public async Task<User> Registration(string username, string firstname, string lastname, string password,
         [Service] IUserRepository userRepo, [Service] IUserService userService) {
         if (!userRepo.IsUsernameAvailable(username).Result)
             throw new UsernameAlreadyTakenException(username);
