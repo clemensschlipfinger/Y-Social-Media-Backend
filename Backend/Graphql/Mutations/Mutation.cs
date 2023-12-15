@@ -1,4 +1,5 @@
 using Domain.Repositories.Implementations;
+using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;
 using Model.Entities;
 
@@ -25,5 +26,27 @@ public class Mutation
         await ufuRepo.CreateAsync(ufu);
         
         return master;
+    }
+    
+    public async Task<User> UserRegistration(string username, string firstname, string lastname, string password, [Service] IUserRepository userRepo)
+    {
+
+        if (!userRepo.IsUsernameAvailable(username).Result) {
+            throw new Exception("Username is not available");
+        }
+
+        ;
+
+        var user = new User()
+        {
+            Username = username,
+            PasswordHash = password,
+            FirstName = firstname,
+            LastName = lastname
+        };
+        
+        await userRepo.CreateAsync(user);
+        
+        return user;
     }
 }
