@@ -28,7 +28,6 @@ public class IsUserHandler : AuthorizationHandler<IsUserRequirement, IResolverCo
         
         authContext.Succeed(requirement); 
         
-        
         return Task.CompletedTask;
     }
 }
