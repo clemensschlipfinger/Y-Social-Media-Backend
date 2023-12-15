@@ -1,29 +1,45 @@
-using Backend.Identity;
 using Domain.Repositories.Implementations;
-using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;
 using Model.Entities;
 
 namespace Backend.Graphql.Mutations;
 
-public class Mutation {
+public class Mutation
+{
     [Authorize]
-    public async Task<User> AddFollow(int master_id, int slave_id, [Service] IUserFollowsRepository ufuRepo,
-        [Service] IUserRepository userRepo) {
+    public async Task<User> AddFollow(int master_id, int slave_id, [Service] IUserFollowsRepository ufuRepo, [Service] IUserRepository userRepo)
+    {
         var master = await userRepo.ReadAsync(slave_id);
-
-        if (ufuRepo.IsFollowing(master_id, slave_id)) {
+        
+        if (ufuRepo.IsFollowing(master_id, slave_id))
+        {
             return master;
-        }
-
-        var ufu = new UserFollowsUser() {
+        } 
+        
+        var ufu = new UserFollowsUser()
+        {
             MasterId = master_id,
             SlaveId = slave_id
         };
-
+        
         await ufuRepo.CreateAsync(ufu);
-
+        
         return master;
+    }
+    
+    [Error(typeof(UserNotFoundException))]
+    [Error(typeof(InvalidPasswordException))]
+    public async Task<TokenResponse> Login(string username, string password, [Service] IJwtService jwtService, [Service] IUserService userService)
+    { 
+        var storedUser = await userService.GetUser(username);
+        if (storedUser == null)
+            throw new UserNotFoundException(username);
+
+        if (!userService.IsAuthenticated(password, storedUser))
+            throw new InvalidPasswordException();
+
+        var tokenString = jwtService.GenerateToken(storedUser);
+        return new TokenResponse(tokenString, storedUser);
     }
 
     [Error(typeof(UsernameAlreadyTakenException))]

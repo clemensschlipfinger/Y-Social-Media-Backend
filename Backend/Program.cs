@@ -51,10 +51,10 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    /*
-   options.AddPolicy("OwnsBlog", policy =>
-        policy.Requirements.Add(new OwnsBlogRequirement())); 
-    */
+/*
+   options.AddPolicy("AddFollowPolicy", policy =>
+        policy.Requirements.Add(new IsUserRequirement("slave_id"))); 
+*/
 });
 
 builder.Services.AddTransient<IJwtService, JwtService>();
@@ -66,6 +66,7 @@ builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
     .AddMutationType<Mutation>()
+    .AddMutationConventions(applyToAllMutations: true)
     .AddQueryType<Query>();
 
 var app = builder.Build();
@@ -75,6 +76,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGraphQL();
-app.MapControllers();
+//app.MapControllers();
 
 app.Run();
