@@ -13,4 +13,13 @@ public class UserFollowsRepository : ARepository<UserFollowsUser>, IUserFollowsR
         => base.Read((ufu) => ufu.MasterId == user_id)
             .Include(ufu => ufu.Slave)
             .Select(ufu => ufu.Slave);
+
+    public IQueryable<User> GetFollowing(int user_id)
+        => base.Read((ufu) => ufu.SlaveId== user_id)
+            .Include(ufu => ufu.Master)
+            .Select(ufu => ufu.Master);
+
+    public bool IsFollowing(int master_id, int slave_id)
+        => Table.Find(master_id, slave_id) != null;
+
 }

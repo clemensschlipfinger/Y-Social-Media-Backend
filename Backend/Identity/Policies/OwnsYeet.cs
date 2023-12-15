@@ -4,42 +4,35 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Backend.Identity.Policies;
 
-public class OwnsBlogRequirement : IAuthorizationRequirement { } 
-
-/*
-public class OwnsBlogHandler : AuthorizationHandler<OwnsBlogRequirement>
+public class IsUserRequirement : IAuthorizationRequirement
 {
-    public readonly BloggingContext _db;
+    private readonly string _idParam;
 
-    public OwnsBlogHandler(BloggingContext db)
+    public IsUserRequirement(string idParam)
     {
-        this._db = db;
-    }
+        _idParam = idParam;
+    } 
+} 
+
+public class OwnsBlogHandler : AuthorizationHandler<IsUserRequirement>
+{
 
     protected override Task HandleRequirementAsync(
-        AuthorizationHandlerContext context, OwnsBlogRequirement requirement)
+        AuthorizationHandlerContext context, IsUserRequirement requirement)
     {
-        var reqblogId = (int)(context.Resource as IMiddlewareContext)?.Selection.Arguments["id"].Value;
-        if (reqblogId == null)
-        {
+        
+        var req_id = (int)(context.Resource as IMiddlewareContext)?.Selection.Arguments["id"].Value;
+        if (req_id == null)
             return Task.CompletedTask; 
-        }
         
         var userid = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         if (userid is null)
-        {
             return Task.CompletedTask;
-        }
-        var foundblog = _db.Blogs.Where(b => b.UserId.ToString() == userid).SingleOrDefault(b => b.Id == reqblogId);
-        if (foundblog is null)
-        {
-            return Task.CompletedTask;
-        }
         
-        context.Succeed(requirement);
-
+        if(userid != req_id.ToString())
+            return Task.CompletedTask;
+        
+        context.Succeed(requirement); 
         return Task.CompletedTask;
     }
 }
-
-*/

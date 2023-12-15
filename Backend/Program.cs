@@ -49,17 +49,16 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-/*
 builder.Services.AddAuthorization(options =>
 {
+    /*
    options.AddPolicy("OwnsBlog", policy =>
         policy.Requirements.Add(new OwnsBlogRequirement())); 
+    */
 });
-*/
 
 builder.Services.AddTransient<IJwtService, JwtService>();
-//builder.Services.AddTransient<IUserService, UserService>();
-//builder.Services.AddTransient<IAuthorizationHandler, OwnsBlogHandler>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddControllers();
 

@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Model.Configuration;
 using Model.Entities;
 
 namespace Backend.Identity;
@@ -5,14 +7,14 @@ namespace Backend.Identity;
 public interface IUserService
 {
     Task<User?> GetUser(string? username);
-    bool IsAuthenticated(string? password, User? user);
+    bool IsAuthenticated(string password, User user);
 }
-/*
+
 public sealed class UserService : IUserService
 {
-    private readonly BloggingContext _db;
+    private readonly YDbContext _db;
 
-    public UserService(BloggingContext db)
+    public UserService(YDbContext db)
     {
         _db = db;
     }
@@ -24,7 +26,7 @@ public sealed class UserService : IUserService
         return await _db.Users.SingleOrDefaultAsync(u => u.Username == username);
     }
 
-    public bool IsAuthenticated(string? password, User u)
+    public bool IsAuthenticated(string password, User u)
     {
         ArgumentNullException.ThrowIfNull(password);
         ArgumentNullException.ThrowIfNull(u);
@@ -32,4 +34,3 @@ public sealed class UserService : IUserService
         return BCrypt.Net.BCrypt.Verify(password, u.PasswordHash);
     }
 }
-*/

@@ -24,7 +24,7 @@ public class JwtController : ControllerBase
         if (storedUser == null)
             return Unauthorized();
         
-        if (!_userService.IsAuthenticated(userInfo?.Password, storedUser))
+        if (!_userService.IsAuthenticated(userInfo.Password, storedUser))
             return Unauthorized();
 
         var tokenString = _jwtService.GenerateToken(storedUser);

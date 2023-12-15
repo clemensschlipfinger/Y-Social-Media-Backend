@@ -15,4 +15,7 @@ public class Query
     
     public IQueryable<User> GetFollowers(int user_id, [Service] IUserFollowsRepository repo)
         => repo.GetFollowers(user_id);
+    
+    public IQueryable<User> GetFollowing(int user_id, [Service] IUserFollowsRepository repo)
+        => repo.GetFollowing(user_id);
 }
