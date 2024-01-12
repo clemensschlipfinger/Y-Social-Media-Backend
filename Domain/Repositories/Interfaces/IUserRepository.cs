@@ -8,5 +8,5 @@ public interface IUserRepository : IRepository<User>
     
     public IQueryable<User> Read(int id);
     
-    public IQueryable<List<User>> ReadAll();
+    public IQueryable<User> ReadAll();
 }

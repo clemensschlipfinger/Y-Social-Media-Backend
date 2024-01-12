@@ -20,7 +20,7 @@ public class Query
     public IQueryable<User> GetUser(int userId,[Service] IUserRepository repo)
         => repo.Read(userId);
     
-    public IQueryable<List<User>> GetUsers([Service] IUserRepository repo)
+    public IQueryable<User> GetUsers([Service] IUserRepository repo)
         => repo.ReadAll();
     
     

@@ -5,12 +5,15 @@ using Backend.Identity;
 using Backend.Identity.Policies;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
+using HotChocolate.Authorization;
+using HotChocolate.Resolvers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.IdentityModel.Tokens;
 using Model.Configuration;
 using Model.Entities;
+using IAuthorizationHandler = Microsoft.AspNetCore.Authorization.IAuthorizationHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,14 +54,14 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-/*
    options.AddPolicy("AddFollowPolicy", policy =>
-        policy.Requirements.Add(new IsUserRequirement("slave_id"))); 
-*/
+        policy.Requirements.Add(new IsUserRequirement("slaveId"))); 
 });
 
 builder.Services.AddTransient<IJwtService, JwtService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IAuthorizationHandler, IsUserHandler>();
+
 
 builder.Services.AddControllers();
 
