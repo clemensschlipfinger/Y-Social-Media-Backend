@@ -1,5 +1,6 @@
 using System.Text;
 using Backend.Graphql.Mutations;
+using Backend.Graphql.Query;
 using Backend.Identity;
 using Backend.Identity.Policies;
 using Domain.Repositories.Implementations;
@@ -10,7 +11,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.IdentityModel.Tokens;
 using Model.Configuration;
 using Model.Entities;
-using TestGraphql;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,13 +1,9 @@
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;
-using HotChocolate.Types;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Model.Configuration;
 using Model.Entities;
 
-namespace TestGraphql;
+namespace Backend.Graphql.Query;
 
 public class Query
 {

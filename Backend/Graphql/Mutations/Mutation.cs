@@ -9,24 +9,22 @@ namespace Backend.Graphql.Mutations;
 public class Mutation
 {
     [Authorize]
-    public async Task<User> AddFollow(int master_id, int slave_id, [Service] IUserFollowsRepository ufuRepo, [Service] IUserRepository userRepo)
+    public async Task<User> AddFollow(int masterId, int slaveId, [Service] IUserFollowsRepository ufuRepo, [Service] IUserRepository userRepo)
     {
-        var master = await userRepo.ReadAsync(slave_id);
+        var master = await userRepo.ReadAsync(slaveId);
         
-        if (ufuRepo.IsFollowing(master_id, slave_id))
-        {
-            return master;
-        } 
+        if (ufuRepo.IsFollowing(masterId, slaveId))
+            return master!;
         
         var ufu = new UserFollowsUser()
         {
-            MasterId = master_id,
-            SlaveId = slave_id
+            MasterId = masterId,
+            SlaveId = slaveId
         };
         
         await ufuRepo.CreateAsync(ufu);
         
-        return master;
+        return master!;
     }
     
     [Error(typeof(UserNotFoundException))]

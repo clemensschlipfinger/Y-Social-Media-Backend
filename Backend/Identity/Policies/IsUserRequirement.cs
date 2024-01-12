@@ -20,14 +20,12 @@ public class IsUserHandler : AuthorizationHandler<IsUserRequirement, IResolverCo
     protected override Task HandleRequirementAsync(
         AuthorizationHandlerContext authContext, IsUserRequirement requirement, IResolverContext resolverContext)
     {
-        var isUserReq = requirement as IsUserRequirement;
-        
         var userid = authContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         if (userid is null)
             return Task.CompletedTask;
         
-        authContext.Succeed(requirement); 
         
+        authContext.Succeed(requirement); 
         return Task.CompletedTask;
     }
 }
