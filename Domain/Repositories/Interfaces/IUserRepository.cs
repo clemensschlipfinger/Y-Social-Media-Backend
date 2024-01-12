@@ -1,3 +1,4 @@
+using Domain.DTOs;
 using Model.Entities;
 
 namespace Domain.Repositories.Interfaces;
@@ -8,5 +9,5 @@ public interface IUserRepository : IRepository<User>
     
     public IQueryable<User> Read(int id);
     
-    public IQueryable<User> ReadAll();
+    public IQueryable<DefaultUserDto> ReadAll();
 }

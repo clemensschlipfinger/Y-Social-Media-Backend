@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
+using Domain.DTOs;
 using Domain.Repositories.Interfaces;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Model.Configuration;
 using Model.Entities;
@@ -19,8 +21,8 @@ public class UserRepository : ARepository<User>, IUserRepository
         return Table.Where(e => e.Id == id);
     }
 
-    public IQueryable<User> ReadAll()
+    public IQueryable<DefaultUserDto> ReadAll()
     {
-        return Table;
+        return Table.Select(u => u.Adapt<DefaultUserDto>());
     }
 }

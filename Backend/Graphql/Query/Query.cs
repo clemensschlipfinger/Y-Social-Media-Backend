@@ -1,3 +1,4 @@
+using Domain.DTOs;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;
@@ -20,7 +21,7 @@ public class Query
     public IQueryable<User> GetUser(int userId,[Service] IUserRepository repo)
         => repo.Read(userId);
     
-    public IQueryable<User> GetUsers([Service] IUserRepository repo)
+    public IQueryable<DefaultUserDto> GetUsers([Service] IUserRepository repo)
         => repo.ReadAll();
     
     
