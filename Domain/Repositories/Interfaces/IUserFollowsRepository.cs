@@ -1,7 +1,6 @@
-using Domain.Repositories.Interfaces;
 using Model.Entities;
 
-namespace Domain.Repositories.Implementations;
+namespace Domain.Repositories.Interfaces;
 
 public interface IUserFollowsRepository : IRepository<UserFollowsUser>
 {

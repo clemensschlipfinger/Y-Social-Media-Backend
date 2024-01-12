@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Domain.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Model.Configuration;
 using Model.Entities;
