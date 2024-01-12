@@ -52,15 +52,17 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+/*
 builder.Services.AddAuthorization(options =>
 {
    options.AddPolicy("AddFollowPolicy", policy =>
         policy.Requirements.Add(new IsUserRequirement("slaveId"))); 
 });
+*/
 
 builder.Services.AddTransient<IJwtService, JwtService>();
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IAuthorizationHandler, IsUserHandler>();
+//builder.Services.AddTransient<IAuthorizationHandler, IsUserHandler>();
 
 
 builder.Services.AddControllers();
@@ -79,6 +81,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGraphQL();
-//app.MapControllers();
 
 app.Run();
