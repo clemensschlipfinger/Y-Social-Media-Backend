@@ -18,4 +18,9 @@ public class UserRepository : ARepository<User>, IUserRepository
     public IQueryable<User> Read(int id) {
         return Table.Where(e => e.Id == id);
     }
+
+    public IQueryable<List<User>> ReadAll()
+    {
+        return Table.Select(e => new List<User> {e});
+    }
 }
