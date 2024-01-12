@@ -10,9 +10,8 @@ namespace Backend.Graphql.Mutations;
 public class Mutation
 {
     [Authorize]
-    public async Task<User> AddFollow(int masterId, [Service] IUserFollowsRepository ufuRepo, [Service] IUserRepository userRepo)
+    public async Task<User> AddFollow(int masterId, int slaveId, [Service] IUserFollowsRepository ufuRepo, [Service] IUserRepository userRepo)
     {
-        int slaveId = 0;
         var master = await userRepo.ReadAsync(slaveId);
         
         if (ufuRepo.IsFollowing(masterId, slaveId))
