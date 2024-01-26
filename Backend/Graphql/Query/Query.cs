@@ -2,6 +2,7 @@ using Domain.DTOs;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;
+using Mapster;
 using Model.Entities;
 
 namespace Backend.Graphql.Query;
@@ -23,6 +24,10 @@ public class Query
     
     public IQueryable<DefaultUserDto> GetUsers([Service] IUserRepository repo)
         => repo.ReadAll();
-    
-    
+
+    public CountUserDto GetFollowingCount(int userId, [Service] IUserFollowsRepository repo)
+        => repo.GetFollowingCount(userId);
+    public CountUserDto GetFollowerCount(int userId, [Service] IUserFollowsRepository repo)
+        => repo.GetFollowersCount(userId);
+
 }
