@@ -64,4 +64,22 @@ public class Mutation
 
         return user;
     }
+
+    public async Task<Yeet> CreateYeet(int userId, string text,[Service] IYeetRepository yeetRepo)
+    {
+        var yeet = new Yeet
+        {
+            Body = text,
+            CreatedAt = DateTime.Now.ToUniversalTime(),
+            UserId = userId
+        };
+
+        return await yeetRepo.CreateAsync(yeet);
+    }
+
+    public async Task<int> DeleteYeet(int yeetId, [Service] IYeetRepository yeetRepo)
+    {
+        await yeetRepo.DeleteAsync(y => y.Id == yeetId);
+        return yeetId;
+    }
 }
