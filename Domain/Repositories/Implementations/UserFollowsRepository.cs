@@ -40,5 +40,5 @@ public class UserFollowsRepository : ARepository<UserFollowsUser>, IUserFollowsR
 
     public bool IsFollowing(int master_id, int slave_id)
         => Table.Find(master_id, slave_id) != null;
-
+    
 }

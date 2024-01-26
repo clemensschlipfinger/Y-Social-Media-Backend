@@ -4,11 +4,11 @@ VALUES
     ('user2', 'Jane', 'Smith', '$2a$10$Z2cEZ5JiyMbkEWsdHLTn2e1CFWDWS0tMIsFX7Od0/o.IX2M7LXa6O'),
     ('user3', 'Bob', 'Johnson', '$2a$10$Z2cEZ5JiyMbkEWsdHLTn2e1CFWDWS0tMIsFX7Od0/o.IX2M7LXa6O');
 
-INSERT INTO yeets (body, user_id)
+INSERT INTO yeets (body, user_id, created_at)
 VALUES
-    ('This is my first yeet!', 1),
-    ('Just yeeted again, feeling good!', 2),
-    ('Yeet of the day!', 3);
+    ('This is my first yeet!', 1, '2023-12-01'),
+    ('Just yeeted again, feeling good!', 2, '2023-11-15'),
+    ('Yeet of the day!', 3, '2023-02-01');
 
 INSERT INTO user_likes_yeets_jt (user_id, yeet_id)
 VALUES

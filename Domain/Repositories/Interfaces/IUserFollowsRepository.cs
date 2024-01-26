@@ -10,5 +10,5 @@ public interface IUserFollowsRepository : IRepository<UserFollowsUser>
     public CountUserDto GetFollowingCount(int userId);
     public CountUserDto GetFollowersCount(int userId);
     public bool IsFollowing(int master_id, int slave_id);
-    
+
 }
