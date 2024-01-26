@@ -16,17 +16,18 @@ public class IsUserRequirement : IAuthorizationRequirement
     } 
 } 
 
-public class IsUserHandler : AuthorizationHandler<IsUserRequirement>
+public class IsUserHandler : AuthorizationHandler<IsUserRequirement, IResolverContext>
 {
 
     protected override Task HandleRequirementAsync(
-        AuthorizationHandlerContext authContext, IsUserRequirement requirement)
+        AuthorizationHandlerContext authContext, IsUserRequirement requirement, IResolverContext context)
     {
-        var userid = authContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var reqblogId = (context as IMiddlewareContext)?.Selection.Arguments["input"];
+        
+        var userid = authContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier);
         if (userid is null)
             return Task.CompletedTask;
         
-        Console.WriteLine("hehe");
         
         authContext.Succeed(requirement); 
         return Task.CompletedTask;

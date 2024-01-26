@@ -2,13 +2,14 @@ using Backend.Identity;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;
+using HotChocolate.Resolvers;
 using Model.Entities;
 
 namespace Backend.Graphql.Mutations;
 
 public class Mutation
 {
-    [Authorize(Policy = "AddFollowPolicy")]
+    [Authorize]
     public async Task<User> AddFollow(int masterId, int slaveId, [Service] IUserFollowsRepository ufuRepo, [Service] IUserRepository userRepo)
     {
         var master = await userRepo.ReadAsync(slaveId);
