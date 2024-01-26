@@ -64,6 +64,8 @@ builder.Services.AddTransient<IJwtService, JwtService>();
 builder.Services.AddTransient<IUserService, UserService>();
 //builder.Services.AddTransient<IAuthorizationHandler, IsUserHandler>();
 
+    
+
 
 builder.Services.AddControllers();
 
@@ -81,5 +83,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGraphQL();
+
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 app.Run();
