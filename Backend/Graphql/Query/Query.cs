@@ -7,8 +7,7 @@ using Model.Entities;
 
 namespace Backend.Graphql.Query;
 
-public class Query
-{
+public class Query {
     public IQueryable<Yeet> GetYeets([Service] IYeetRepository repo)
         => repo.ReadFullYeet();
 
@@ -22,8 +21,25 @@ public class Query
     public IQueryable<User> GetUser(int userId, [Service] IUserRepository repo)
         => repo.Read(userId);
 
-    public IQueryable<DefaultUserDto> GetUsers([Service] IUserRepository repo)
-        => repo.ReadAll();
+    public IQueryable<FullUserDto> GetUsers([Service] IUserRepository userRepo,
+        [Service] IUserFollowsRepository userFollowsRepo) {
+        var users = userRepo.ReadAll();
+        List<ExpandedUser> expUser = new();
+        foreach (var user in users) {
+            expUser.Add(new ExpandedUser {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username,
+                Id = user.Id,
+                FollowerCount = userFollowsRepo.GetFollowersCount(user.Id).Count,
+                FollowingCount = userFollowsRepo.GetFollowingCount(user.Id).Count,
+                Followers = userFollowsRepo.GetFollowers(user.Id).Select(u => u.Adapt<DefaultUserDto>()),
+                Following = userFollowsRepo.GetFollowing(user.Id).Select(u => u.Adapt<DefaultUserDto>())
+            });
+        }
+
+        return expUser.Select(eu => eu.Adapt<FullUserDto>()).AsQueryable();
+    }
 
     public CountUserDto GetFollowingCount(int userId, [Service] IUserFollowsRepository repo)
         => repo.GetFollowingCount(userId);
