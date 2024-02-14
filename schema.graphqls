@@ -1,0 +1,323 @@
+type Query {
+    users(input: UsersInput!): UsersResult
+    user(input: UserInput!): UserResult
+
+    yeets(input: YeetsInput!): YeetsResult
+    yeet(input: YeetInput!): YeetResult
+    feed(input: FeedInput!): FeedResult
+    yomments(input: YommentsInput!): YommentsResult
+    yomment(input: YommentInput!): YommentResult
+
+    tags(input: TagsInput!): TagsResult
+    tag(input: TagInput!): TagResult
+}
+
+type Mutation {
+    registration(input: RegistrationInput!): RegistrationResult!
+    login(input: LoginInput!): LoginResult!
+    addFollow(input: AddFollowInput!): AddFollowResult!
+    removeFollow(input: RemoveFollowInput!): RemoveFollowResult!
+
+    createYeet(input: CreateYeetInput!): CreateYeetResult!
+    deleteYeet(input: DeleteYeetInput!): DeleteYeetResult! # also deletes all yomments
+    createYomment(input: CreateYommentInput!): CreateYommentResult!
+    deleteYomment(input: DeleteYommentInput!): DeleteYommentResult!
+
+    createTag(input: CreateTagInput!): CreateTagResult!
+}
+
+# Query
+
+enum SortDirection {
+    ASC
+    DSC
+}
+
+type UserInfo {
+    id: Int!
+    username: String!
+    firstName: String!
+    lastName: String!
+}
+
+type User {
+    id: Int!
+    username: String!
+    firstName: String!
+    lastName: String!
+    passwordHash: String! # wirklich notwendig? Frontend brauchts nicht
+    followerCount: Int!
+    followingCount: Int!
+    follower: [UserInfo!]!
+    following: [UserInfo!]!
+}
+
+input UserInput {
+    userId: Int!
+}
+
+type UserResult {
+    result: User!
+}
+
+input UsersInput {
+    limit: Int!
+    offset: Int!
+    sorting: SortUsers!
+    direction: SortDirection = ASC
+    filter: String # nach usernamen filtern
+}
+
+type UsersResult {
+    result: [User!]!
+    count: Int!
+}
+
+enum SortUsers {
+    ID
+    USERNAME
+    FIRST_NAME
+    LAST_NAME
+    FOLLOWER
+}
+
+scalar DateTime @specifiedBy(url: "https://www.graphql-scalars.com/date-time")
+
+type Yeet {
+    id: Int!
+    title: String!
+    body: String!
+    tags: [Tag!]!
+    likes: Int! # Count likes
+    createdAt: DateTime!
+    userId: Int!
+    user: User!
+    yomments: [Yomment!]! # also known as Comments
+}
+
+input YeetInput {
+    yeetId: Int!
+}
+
+type YeetResult {
+    result: Yeet!
+}
+
+input YeetsInput {
+    limit: Int!
+    offset: Int!
+    sorting: SortYeets!
+    direction: SortDirection = ASC
+    filter: String # nach title filtern
+    tags: [Int!]
+}
+
+type YeetsResult {
+    result: [Yeet!]!
+    count: Int!
+}
+
+input FeedInput {
+    userId: Int!
+    limit: Int!
+    offset: Int!
+}
+
+type FeedResult {
+    result: [Yeet!]!
+    count: Int!
+}
+
+enum SortYeets {
+    ID
+    TITLE
+    CREATED_AT
+    LIKES
+    TAG # name
+}
+
+type Yomment {
+    id: Int!
+    body: String!
+    likes: Int!
+    createdAt: DateTime!
+    yeetId: Int!
+    userId: Int!
+    user: User!
+}
+
+input YommentInput {
+    yommentId: Int!
+}
+
+type YommentResult {
+    result: Yomment!
+}
+
+input YommentsInput {
+    limit: Int!
+    offset: Int!
+    sorting: SortYomments!
+    direction: SortDirection = ASC
+}
+
+type YommentsResult {
+    result: [Yomment!]!
+    count: Int!
+}
+
+enum SortYomments {
+    ID
+    CREATED_AT
+    LIKES
+}
+
+type Tag {
+    id: Int!
+    name: String!
+}
+
+input TagInput {
+    tagId: Int!
+}
+
+type TagResult {
+    result: Tag!
+}
+
+input TagsInput {
+    limit: Int!
+    offset: Int!
+    sorting: SortTags!
+    direction: SortDirection = ASC
+    filter: String # nach name filtern
+}
+
+type TagsResult {
+    result: [Tag!]!
+    count: Int!
+}
+
+enum SortTags {
+    ID
+    NAME
+}
+
+# Mutation
+
+interface Error {
+    message: String!
+}
+
+input RegistrationInput {
+    username: String!
+    firstName: String!
+    lastName: String!
+    password: String!
+}
+
+type UsernameAlreadyTakenError implements Error {
+    message: String!
+}
+
+type PasswordTooShortError implements Error {
+    message: String!
+}
+
+union RegistrationError = UsernameAlreadyTakenError | PasswordTooShortError
+
+type RegistrationResult {
+    token: String
+    user: User
+    errors: [RegistrationError!]
+}
+
+input LoginInput {
+    username: String!
+    password: String!
+}
+
+type UserNotFoundError implements Error {
+    message: String!
+}
+
+type InvalidPasswordError implements Error {
+    message: String!
+}
+
+union LoginError = UserNotFoundError | InvalidPasswordError
+
+type LoginResult {
+    token: String
+    user: User
+    errors: [LoginError!]
+}
+
+input AddFollowInput {
+    userId: Int!
+    followingId: Int!
+}
+
+type AddFollowResult {
+    newFollowingCount: Int! # von Follower
+    newFollowerCount: Int! # von Following
+}
+
+input RemoveFollowInput {
+    userId: Int!
+    followingId: Int!
+}
+
+type RemoveFollowResult {
+    newFollowingCount: Int! # von Follower
+    newFollowerCount: Int! # von Following
+}
+
+input CreateYeetInput {
+    userId: Int!
+    title: String!
+    body: String!
+    tags: [Int!]
+}
+
+type CreateYeetResult {
+    yeet: Yeet
+}
+
+input DeleteYeetInput {
+    yeetId: Int!
+}
+
+type DeleteYeetResult {
+    int: Int
+}
+
+input CreateYommentInput {
+    yeetId: Int!
+    body: String!
+    userId: Int!
+}
+
+type CreateYommentResult {
+    yeet: Yeet
+    yomment: Yomment
+    yomments: [Yomment!]!
+}
+
+input DeleteYommentInput {
+    yommentId: Int!
+}
+
+type DeleteYommentResult {
+    yeet: Yeet
+    yomments: [Yomment!]!
+}
+
+input CreateTagInput {
+    name: String!
+}
+
+type CreateTagResult {
+    tag: Tag
+    tags: [Tag!]!
+}
