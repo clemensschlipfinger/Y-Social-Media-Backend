@@ -1,3 +1,5 @@
+using Backend.Graphql.Types.Inputs;
+using Backend.Graphql.Types.Results;
 using Domain.DTOs;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
@@ -8,28 +10,57 @@ using Model.Entities;
 namespace Backend.Graphql.Query;
 
 public class Query {
-    public IQueryable<Yeet> GetYeets([Service] IYeetRepository repo)
-        => repo.ReadFullYeet();
+    public UsersResult Users(UsersInput input)
+    {
+        // Implement your logic here
+        throw new NotImplementedException();
+    }
 
-    public IQueryable<User> GetFollowers(int userId, [Service] IUserFollowsRepository repo)
-        => repo.GetFollowers(userId);
+    public UserResult User(UserInput input)
+    {
+        // Implement your logic here
+        throw new NotImplementedException();
+    }
 
-    public IQueryable<User> GetFollowing(int userId, [Service] IUserFollowsRepository repo)
-        => repo.GetFollowing(userId);
+    public YeetsResult Yeets(YeetsInput input)
+    {
+        // Implement your logic here
+        throw new NotImplementedException();
+    }
 
-    [Authorize]
-    public IQueryable<User> GetUser(int userId, [Service] IUserRepository repo)
-        => repo.Read(userId);
+    public YeetResult Yeet(YeetInput input)
+    {
+        // Implement your logic here
+        throw new NotImplementedException();
+    }
 
-    public IQueryable<FullUserDto> GetUsers([Service] IUserRepository userRepo)
-    => userRepo.ReadFullUsers();
+    public FeedResult Feed(FeedInput input)
+    {
+        // Implement your logic here
+        throw new NotImplementedException();
+    }
 
-    public CountUserDto GetFollowingCount(int userId, [Service] IUserFollowsRepository repo)
-        => repo.GetFollowingCount(userId);
+    public YommentsResult Yomments(YommentsInput input)
+    {
+        // Implement your logic here
+        throw new NotImplementedException();
+    }
 
-    public CountUserDto GetFollowerCount(int userId, [Service] IUserFollowsRepository repo)
-        => repo.GetFollowersCount(userId);
+    public YommentResult Yomment(YommentInput input)
+    {
+        // Implement your logic here
+        throw new NotImplementedException();
+    }
 
-    public IQueryable<Yeet> GetForYouPage(int userId, int skip, int count, [Service] IYeetRepository repo) =>
-        repo.ReadForYouPage(userId, skip, count);
+    public TagsResult Tags(TagsInput input)
+    {
+        // Implement your logic here
+        throw new NotImplementedException();
+    }
+
+    public TagResult Tag(TagInput input)
+    {
+        // Implement your logic here
+        throw new NotImplementedException();
+    }
 }
