@@ -8,21 +8,19 @@ using Model.Entities;
 
 namespace Domain.Repositories.Implementations;
 
-public class UserFollowsRepository : ARepository<UserFollowsUser>, IUserFollowsRepository
+public class UserFollowsRepository(YDbContext context) : ARepository<UserFollowsUser>(context), IUserFollowsRepository
 {
-    public UserFollowsRepository(YDbContext context) : base(context) { }
 
-    public IQueryable<User> GetFollowers(int user_id)
-        => Table.Where((ufu) => ufu.FollowingId == user_id)
+    public async Task<List<User>> GetFollowers(int userId)
+        => await Table.Where((ufu) => ufu.FollowingId == userId)
             .Include(ufu => ufu.Follower)
-            .Select(ufu => ufu.Follower);
+            .Select(ufu => ufu.Follower).ToListAsync();
 
-    public IQueryable<User> GetFollowing(int user_id)
-        => Table.Where((ufu) => ufu.FollowerId== user_id)
+    public async Task<List<User>> GetFollowing(int userId)
+        => await Table.Where((ufu) => ufu.FollowerId== userId)
             .Include(ufu => ufu.Following)
-            .Select(ufu => ufu.Following);
+            .Select(ufu => ufu.Following).ToListAsync();
 
-    public bool IsFollowing(int following_id, int follower_id)
-        => Table.FirstOrDefault(u => u.FollowingId == following_id && u.FollowerId == follower_id) != null;
-    
+    public async Task<bool> IsFollowing(int followingId, int followerId)
+        => await Table.FirstOrDefaultAsync(u => u.FollowingId == followingId && u.FollowerId == followerId) != null;
 }

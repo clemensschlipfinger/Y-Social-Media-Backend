@@ -7,7 +7,7 @@ public interface IUserRepository : IRepository<User>
 {
     Task<bool> IsUsernameAvailable(string username);
     
-    Graphql.Types.User Read(int id);
+    Task<Graphql.Types.User?> Read(int id);
     
-    List<Graphql.Types.User> ReadAll();
+    Task<List<Graphql.Types.User>> ReadAll();
 }

@@ -5,9 +5,9 @@ namespace Domain.Repositories.Interfaces;
 
 public interface IYeetRepository  : IRepository<Yeet>
 {
-    IQueryable<Yeet> ReadFullYeet();
+    Task<Yeet?> ReadYeet(int id);
 
-    IQueryable<Yeet> ReadUserYeets(int userId, int count);
+    Task<List<Yeet>> ReadYeets(int userId, int skip, int count);
 
-    IQueryable<Yeet> ReadForYouPage(int userId, int skip,int count);
+    Task<List<Yeet>> ReadFeed(int userId, int skip, int count);
 }

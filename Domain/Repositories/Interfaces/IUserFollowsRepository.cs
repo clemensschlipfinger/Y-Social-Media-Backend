@@ -5,8 +5,8 @@ namespace Domain.Repositories.Interfaces;
 
 public interface IUserFollowsRepository : IRepository<UserFollowsUser>
 {
-    public IQueryable<User> GetFollowers(int user_id);
-    public IQueryable<User> GetFollowing(int user_id);
-    public bool IsFollowing(int master_id, int slave_id);
+    Task<List<User>> GetFollowers(int userId);
+    Task<List<User>> GetFollowing(int userId);
+    Task<bool> IsFollowing(int followingId, int followerId);
 
 }
