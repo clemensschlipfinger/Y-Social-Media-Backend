@@ -9,6 +9,6 @@ public interface IUserService
     UserResult User(UserInput input);
     RegistrationResult Registration(RegistrationInput input);
     LoginResult Login(LoginInput input);
-    AddFollowResult AddFollow(AddFollowInput input);
+    Task<AddFollowResult> AddFollow(AddFollowInput input);
     RemoveFollowResult RemoveFollow(RemoveFollowInput input);
 }

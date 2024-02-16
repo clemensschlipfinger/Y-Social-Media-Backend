@@ -2,7 +2,7 @@
 
 public class UserNotFoundException : Exception
 {
-    public UserNotFoundException(string username) : base($"User {username} not found.")
+    public UserNotFoundException(int id) : base($"User with id {id} not found.")
     {
     }
 }

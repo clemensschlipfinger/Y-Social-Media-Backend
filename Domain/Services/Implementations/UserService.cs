@@ -31,23 +31,25 @@ public class UserService(IUserRepository userRepository, IUserFollowsRepository 
 
     public async Task<AddFollowResult> AddFollow(AddFollowInput input)
     {
-        var follower = await userRepository.ReadAsync(input.UserId);
-
-        if (follower == null) throw new UserNotFoundException();
-        
-        
-        if (userFollowsRepository.IsFollowing(input.FollowingId, input.UserId))
-            return new AddFollowResult()
-        
-        var ufu = new UserFollowsUser()
-        {
-            FollowingId = followingId,
-            FollowerId = followerId
-        };
-        
-        await ufuRepo.CreateAsync(ufu);
-        
-        return follower!;
+        // var follower = await userRepository.ReadAsync(input.UserId);
+        // var following = await userRepository.ReadAsync(input.FollowingId);
+        //
+        // if (follower == null) throw new UserNotFoundException(input.UserId);
+        // if (following == null) throw new FollowingNotFoundException(input.FollowingId);
+        //
+        // if (userFollowsRepository.IsFollowing(input.FollowingId, input.UserId))
+        //     return new AddFollowResult(follower.)
+        //
+        // var ufu = new UserFollowsUser()
+        // {
+        //     FollowingId = followingId,
+        //     FollowerId = followerId
+        // };
+        //
+        // await ufuRepo.CreateAsync(ufu);
+        //
+        // return follower!;
+        throw new NotImplementedException();
     }
 
     public RemoveFollowResult RemoveFollow(RemoveFollowInput input)

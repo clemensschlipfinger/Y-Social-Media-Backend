@@ -5,11 +5,9 @@ namespace Domain.Repositories.Interfaces;
 
 public interface IUserRepository : IRepository<User>
 {
-    public Task<bool> IsUsernameAvailable(string username);
+    Task<bool> IsUsernameAvailable(string username);
     
-    public IQueryable<User> Read(int id);
+    Graphql.Types.User Read(int id);
     
-    public IQueryable<UserInfoDto> ReadAll();
-    
-    public IQueryable<UserDto> ReadFullUsers();
+    List<Graphql.Types.User> ReadAll();
 }

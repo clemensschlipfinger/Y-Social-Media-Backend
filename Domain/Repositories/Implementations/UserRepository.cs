@@ -21,7 +21,7 @@ public class UserRepository : ARepository<User>, IUserRepository
         return await Table.AllAsync(u => u.Username != username);
     }
 
-    public IQueryable<User> Read(int id)
+    public Graphql.Types.User Read(int id)
     {
         return Table.Where(e => e.Id == id);
     }
