@@ -9,41 +9,40 @@ public class YDbContext : DbContext{
     }
     
     public DbSet<Yeet> Yeets { get; set; } = null!;
+    public DbSet<Yomment> Yomments { get; set; } = null!;
+    public DbSet<Tag> Tags { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<UserFollowsUser> UserFriends { get; set; } = null!;
-    public DbSet<UserLikesYeet> UserLikesYeets { get; set; } = null!;
+    
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserFollowsUser>()
-            .HasKey(ufu => new {ufu.MasterId, ufu.SlaveId});
+            .HasKey(ufu => new {ufu.FollowerId, ufu.FollowingId});
         
         modelBuilder.Entity<UserFollowsUser>()
-            .HasOne(ufu => ufu.Master)
+            .HasOne(ufu => ufu.Following)
             .WithMany()
-            .HasForeignKey(ufu => ufu.MasterId);
+            .HasForeignKey(ufu => ufu.FollowingId);
         
         modelBuilder.Entity<UserFollowsUser>()
-            .HasOne(ufu => ufu.Slave)
+            .HasOne(ufu => ufu.Follower)
             .WithMany()
-            .HasForeignKey(ufu => ufu.SlaveId);
+            .HasForeignKey(ufu => ufu.FollowerId);
         
         modelBuilder.Entity<Yeet>()
             .HasOne(y => y.User)
             .WithMany()
             .HasForeignKey(y => y.UserId);
         
-        modelBuilder.Entity<UserLikesYeet>()
-            .HasKey(uly => new {uly.YeetId, uly.UserId});
+        modelBuilder.Entity<Yomment>()
+            .HasOne(y => y.User)
+            .WithMany()
+            .HasForeignKey(y => y.UserId);
         
-        modelBuilder.Entity<UserLikesYeet>()
-            .HasOne(uly => uly.User)
+        modelBuilder.Entity<Yomment>()
+            .HasOne(y => y.Yeet)
             .WithMany()
-            .HasForeignKey(uly => uly.UserId);
-
-        modelBuilder.Entity<UserLikesYeet>()
-            .HasOne(uly => uly.Yeet)
-            .WithMany()
-            .HasForeignKey(uly => uly.YeetId);
+            .HasForeignKey(y => y.YeetId);
     }
 }

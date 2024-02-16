@@ -8,11 +8,11 @@ namespace Model.Entities;
 [Table("user_follows_users_jt")]
 public class UserFollowsUser
 {
-    [Column("slave_id"),Required]
-    public int SlaveId { get; set; }
-    public User Slave { get; set; }
+    [Column("follower_id"),Required]
+    public int FollowerId { get; set; }
+    public User Follower { get; set; }
     
-    [Column("master_id"),Required]
-    public int MasterId { get; set; }
-    public User Master { get; set; }
+    [Column("following_id"),Required]
+    public int FollowingId { get; set; }
+    public User Following { get; set; }
 }

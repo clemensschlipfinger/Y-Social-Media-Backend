@@ -21,5 +21,4 @@ public class User
    
    [Column("password_hash"),Required]
    public string PasswordHash { get; set; }
-    
 }

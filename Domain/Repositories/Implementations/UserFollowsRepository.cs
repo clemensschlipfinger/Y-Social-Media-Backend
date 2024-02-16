@@ -13,32 +13,16 @@ public class UserFollowsRepository : ARepository<UserFollowsUser>, IUserFollowsR
     public UserFollowsRepository(YDbContext context) : base(context) { }
 
     public IQueryable<User> GetFollowers(int user_id)
-        => Table.Where((ufu) => ufu.MasterId == user_id)
-            .Include(ufu => ufu.Slave)
-            .Select(ufu => ufu.Slave);
+        => Table.Where((ufu) => ufu.FollowingId == user_id)
+            .Include(ufu => ufu.Follower)
+            .Select(ufu => ufu.Follower);
 
     public IQueryable<User> GetFollowing(int user_id)
-        => Table.Where((ufu) => ufu.SlaveId== user_id)
-            .Include(ufu => ufu.Master)
-            .Select(ufu => ufu.Master);
+        => Table.Where((ufu) => ufu.FollowerId== user_id)
+            .Include(ufu => ufu.Following)
+            .Select(ufu => ufu.Following);
 
-    public CountUserDto GetFollowingCount(int userId)
-    {
-        var users = GetFollowing(userId);
-        var count = users.Count();
-        var usersDto = users.Select(u => u.Adapt<DefaultUserDto>());
-        return new CountUserDto(Count: count, Users: usersDto);
-    }
-
-    public CountUserDto GetFollowersCount(int userId)
-    {
-        var users = GetFollowers(userId);
-        var count = users.Count();
-        var usersDto = users.Select(u => u.Adapt<DefaultUserDto>());
-        return new CountUserDto(Count: count, Users: usersDto);
-    }
-
-    public bool IsFollowing(int master_id, int slave_id)
-        => Table.Find(master_id, slave_id) != null;
+    public bool IsFollowing(int following_id, int follower_id)
+        => Table.FirstOrDefault(u => u.FollowingId == following_id && u.FollowerId == follower_id) != null;
     
 }
