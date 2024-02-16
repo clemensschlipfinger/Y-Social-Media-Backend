@@ -1,3 +1,5 @@
+using Backend.Graphql.Types;
+using Backend.Graphql.Types.Exceptions;
 using Backend.Identity;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
@@ -43,12 +45,12 @@ public class Mutation
         return new TokenResponse(tokenString, storedUser);
     }
 
-    [Error(typeof(UsernameAlreadyTakenException))]
+    [Error(typeof(UsernameAlreadyExistsException))]
     [Error(typeof(PasswordTooShortException))]
     public async Task<User> Registration(string username, string firstname, string lastname, string password,
         [Service] IUserRepository userRepo, [Service] IUserService userService) {
         if (!userRepo.IsUsernameAvailable(username).Result)
-            throw new UsernameAlreadyTakenException(username);
+            throw new UsernameAlreadyExistsException(username);
 
         if (password.Length < 8) 
             throw new PasswordTooShortException();
