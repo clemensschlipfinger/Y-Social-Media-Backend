@@ -28,6 +28,7 @@ public class Mutation
         throw new NotImplementedException();
     }
 
+    [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(FollowingNotFoundException))]
     public AddFollowResult AddFollow(AddFollowInput input)
@@ -35,6 +36,7 @@ public class Mutation
         throw new NotImplementedException();
     }
 
+    [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(FollowingNotFoundException))]
     public RemoveFollowResult RemoveFollow(RemoveFollowInput input)
@@ -42,6 +44,7 @@ public class Mutation
         throw new NotImplementedException();
     }
 
+    [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(TagNotFoundException))]
     public CreateYeetResult CreateYeet(CreateYeetInput input)
@@ -49,12 +52,14 @@ public class Mutation
         throw new NotImplementedException();
     }
 
+    [Authorize]
     [Error(typeof(YeetNotFoundException))]
     public DeleteYeetResult DeleteYeet(DeleteYeetInput input)
     {
         throw new NotImplementedException();
     }
 
+    [Authorize]
     [Error(typeof(YeetNotFoundException))]
     [Error(typeof(UserNotFoundException))]
     public CreateYommentResult CreateYomment(CreateYommentInput input)
@@ -62,12 +67,14 @@ public class Mutation
         throw new NotImplementedException();
     }
 
+    [Authorize]
     [Error(typeof(YommentNotFoundException))]
     public DeleteYommentResult DeleteYomment(DeleteYommentInput input)
     {
         throw new NotImplementedException();
     }
 
+    [Authorize]
     [Error(typeof(TagAlreadyExistsException))]
     public CreateTagResult CreateTag(CreateTagInput input)
     {
@@ -83,20 +90,7 @@ public class Mutation
     [Authorize]
     public async Task<User> AddFollow(int followingId, int followerId, [Service] IUserFollowsRepository ufuRepo, [Service] IUserRepository userRepo)
     {
-        var follower = await userRepo.ReadAsync(followerId);
         
-        if (ufuRepo.IsFollowing(followingId, followerId))
-            return follower!;
-        
-        var ufu = new UserFollowsUser()
-        {
-            FollowingId = followingId,
-            FollowerId = followerId
-        };
-        
-        await ufuRepo.CreateAsync(ufu);
-        
-        return follower!;
     }
     
     [Error(typeof(UserNotFoundException))]
