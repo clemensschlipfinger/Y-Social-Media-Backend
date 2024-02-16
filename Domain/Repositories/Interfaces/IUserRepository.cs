@@ -10,4 +10,6 @@ public interface IUserRepository : IRepository<User>
     public IQueryable<User> Read(int id);
     
     public IQueryable<DefaultUserDto> ReadAll();
+    
+    public IQueryable<FullUserDto> ReadFullUsers();
 }

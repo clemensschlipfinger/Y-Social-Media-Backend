@@ -16,10 +16,10 @@ public class YeetRepository : ARepository<Yeet>, IYeetRepository
     }
 
     public IQueryable<Yeet> ReadFullYeet()
-        => base.Read().Include(y => y.User).Take(50);
+        => Table.Take(50).Include(y => y.User);
 
     public IQueryable<Yeet> ReadUserYeets(int userId, int count)
-        => base.Read(y => y.UserId == userId).Include(y => y.User).Take(count);
+        => Table.Where(y => y.UserId == userId).Include(y => y.User).Take(count);
 
     public IQueryable<Yeet> ReadForYouPage(int userId, int skip, int count)
     {
@@ -28,7 +28,7 @@ public class YeetRepository : ARepository<Yeet>, IYeetRepository
             .Where(y => usersIds.Contains(y.UserId))
             .OrderByDescending(y => y.CreatedAt)
             .Skip(skip)
-            .Take(count);
+            .Take(count).Include(u => u.User);
         return yeets;
     }
 }
