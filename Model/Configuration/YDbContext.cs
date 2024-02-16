@@ -13,6 +13,8 @@ public class YDbContext : DbContext{
     public DbSet<Tag> Tags { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<UserFollowsUser> UserFriends { get; set; } = null!;
+    public DbSet<YeetHasTags> YeetHasTags { get; set; } = null!;
+    
     
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,7 +44,20 @@ public class YDbContext : DbContext{
         
         modelBuilder.Entity<Yomment>()
             .HasOne(y => y.Yeet)
+            .WithMany(y => y.Yomments)
+            .HasForeignKey(y => y.YeetId);
+        
+        modelBuilder.Entity<YeetHasTags>()
+            .HasKey(ufu => new {ufu.YeetId, ufu.TagId});
+        
+        modelBuilder.Entity<YeetHasTags>()
+            .HasOne(y => y.Tag)
             .WithMany()
+            .HasForeignKey(y => y.TagId);
+        
+        modelBuilder.Entity<YeetHasTags>()
+            .HasOne(y => y.Yeet)
+            .WithMany(y => y.Tags)
             .HasForeignKey(y => y.YeetId);
     }
 }

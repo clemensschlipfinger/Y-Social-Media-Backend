@@ -16,10 +16,6 @@ public class Yeet
     [Column("body"),DataType(DataType.Text),Required]
     public string Body { get; set; }
     
-    [Column("tag_id"), Required]
-    public int TagId { get; set; }
-    public Tag Tag { get; set; }
-    
     [Column("likes"), Required]
     public int Likes { get; set; }
     
@@ -29,4 +25,7 @@ public class Yeet
     [Column("user_id"), Required]
     public int UserId { get; set; }
     public User User { get; set; }
+    
+    public List<YeetHasTags> Tags { get; set; }
+    public List<Yomment> Yomments { get; set; }
 }
