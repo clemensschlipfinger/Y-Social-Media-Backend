@@ -64,9 +64,6 @@ builder.Services.AddTransient<IJwtService, JwtService>();
 builder.Services.AddTransient<IUserService, UserService>();
 //builder.Services.AddTransient<IAuthorizationHandler, IsUserHandler>();
 
-    
-
-
 builder.Services.AddControllers();
 
 builder.Services
@@ -88,5 +85,9 @@ app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()
     .AllowAnyHeader());
+
+var scope = app.Services.CreateScope();  
+using var dbContext = scope.ServiceProvider.GetRequiredService<YDbContext>();
+dbContext.Database.Migrate();
 
 app.Run();
