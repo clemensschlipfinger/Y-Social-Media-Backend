@@ -2,6 +2,6 @@ namespace Backend.Graphql.Types.Inputs;
 
 public enum SortTags
 {
-    ID,
-    NAME
+    ID = 0,
+    NAME = 1
 }
