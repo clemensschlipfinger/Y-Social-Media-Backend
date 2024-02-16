@@ -1,6 +1,6 @@
-using Backend.Graphql.Types.Inputs;
-using Backend.Graphql.Types.Results;
 using Domain.DTOs;
+using Domain.Graphql.Types.Inputs;
+using Domain.Graphql.Types.Results;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;

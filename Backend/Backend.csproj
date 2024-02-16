@@ -31,4 +31,10 @@
       <ProjectReference Include="..\Model\Model.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Graphql\Types\Exceptions\" />
+      <Folder Include="Graphql\Types\Inputs\" />
+      <Folder Include="Graphql\Types\Results\" />
+    </ItemGroup>
+
 </Project>

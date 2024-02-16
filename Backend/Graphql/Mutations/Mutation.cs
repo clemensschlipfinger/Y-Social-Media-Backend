@@ -1,6 +1,5 @@
-using Backend.Graphql.Types;
-using Backend.Graphql.Types.Exceptions;
 using Backend.Identity;
+using Domain.Graphql.Types.Exceptions;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;
