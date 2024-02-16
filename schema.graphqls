@@ -155,6 +155,7 @@ type YommentResult {
 }
 
 input YommentsInput {
+    yeetId: Int!
     limit: Int!
     offset: Int!
     sorting: SortYomments!
