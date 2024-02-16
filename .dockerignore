@@ -1,0 +1,6 @@
+# Ignoriere bestimmte Verzeichnisse
+bin/
+obj/
+
+# Ignoriere Konfigurationsdateien, die für die lokale Entwicklung gedacht sind
+appsettings.Development.json
