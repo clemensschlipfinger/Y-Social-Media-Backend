@@ -216,7 +216,6 @@ input RegistrationInput {
 type RegistrationResult {
     token: String
     user: User
-    errors: [RegistrationError!]
 }
 
 input LoginInput {
@@ -227,7 +226,6 @@ input LoginInput {
 type LoginResult {
     token: String
     user: User
-    errors: [LoginError!]
 }
 
 input AddFollowInput {
