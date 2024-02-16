@@ -1,6 +1,6 @@
 namespace Domain.Graphql.Types;
 
-public class Yomment
+public record Yomment
 {
     public int Id { get; set; }
     public string Body { get; set; }

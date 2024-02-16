@@ -1,6 +1,6 @@
 namespace Domain.Graphql.Types;
 
-public class UserInfo
+public record UserInfo
 {
     public int Id { get; set; }
     public string Username { get; set; }

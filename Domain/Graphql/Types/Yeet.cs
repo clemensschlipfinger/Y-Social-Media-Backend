@@ -1,6 +1,6 @@
 namespace Domain.Graphql.Types;
 
-public class Yeet
+public record Yeet
 {
     public int Id { get; set; }
     public string Title { get; set; }
