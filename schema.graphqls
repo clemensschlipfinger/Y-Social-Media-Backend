@@ -13,17 +13,17 @@ type Query {
 }
 
 type Mutation {
-    registration(input: RegistrationInput!): RegistrationResult!
-    login(input: LoginInput!): LoginResult!
-    addFollow(input: AddFollowInput!): AddFollowResult!
-    removeFollow(input: RemoveFollowInput!): RemoveFollowResult!
+    registration(input: RegistrationInput!): RegistrationPayload!
+    login(input: LoginInput!): LoginPayload!
+    addFollow(input: AddFollowInput!): AddFollowPayload!
+    removeFollow(input: RemoveFollowInput!): RemoveFollowPayload!
 
-    createYeet(input: CreateYeetInput!): CreateYeetResult!
-    deleteYeet(input: DeleteYeetInput!): DeleteYeetResult! # also deletes all yomments
-    createYomment(input: CreateYommentInput!): CreateYommentResult!
-    deleteYomment(input: DeleteYommentInput!): DeleteYommentResult!
+    createYeet(input: CreateYeetInput!): CreateYeetPayload!
+    deleteYeet(input: DeleteYeetInput!): DeleteYeetPayload! # also deletes all yomments
+    createYomment(input: CreateYommentInput!): CreateYommentPayload!
+    deleteYomment(input: DeleteYommentInput!): DeleteYommentPayload!
 
-    createTag(input: CreateTagInput!): CreateTagResult!
+    createTag(input: CreateTagInput!): CreateTagPayload!
 }
 
 # Query
@@ -57,7 +57,7 @@ input UserInput {
 }
 
 type UserResult {
-    result: User!
+    Result: User!
 }
 
 input UsersInput {
@@ -69,7 +69,7 @@ input UsersInput {
 }
 
 type UsersResult {
-    result: [User!]!
+    Result: [User!]!
     count: Int!
 }
 
@@ -100,7 +100,7 @@ input YeetInput {
 }
 
 type YeetResult {
-    result: Yeet!
+    Result: Yeet!
 }
 
 input YeetsInput {
@@ -113,7 +113,7 @@ input YeetsInput {
 }
 
 type YeetsResult {
-    result: [Yeet!]!
+    Result: [Yeet!]!
     count: Int!
 }
 
@@ -124,7 +124,7 @@ input FeedInput {
 }
 
 type FeedResult {
-    result: [Yeet!]!
+    Result: [Yeet!]!
     count: Int!
 }
 
@@ -151,7 +151,7 @@ input YommentInput {
 }
 
 type YommentResult {
-    result: Yomment!
+    Result: Yomment!
 }
 
 input YommentsInput {
@@ -163,7 +163,7 @@ input YommentsInput {
 }
 
 type YommentsResult {
-    result: [Yomment!]!
+    Result: [Yomment!]!
     count: Int!
 }
 
@@ -183,7 +183,7 @@ input TagInput {
 }
 
 type TagResult {
-    result: Tag!
+    Result: Tag!
 }
 
 input TagsInput {
@@ -195,7 +195,7 @@ input TagsInput {
 }
 
 type TagsResult {
-    result: [Tag!]!
+    Result: [Tag!]!
     count: Int!
 }
 
@@ -322,3 +322,5 @@ type CreateTagResult {
     tag: Tag
     tags: [Tag!]!
 }
+
+# Payload
