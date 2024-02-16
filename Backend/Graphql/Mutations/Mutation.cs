@@ -1,5 +1,7 @@
 using Backend.Identity;
 using Domain.Graphql.Types.Exceptions;
+using Domain.Graphql.Types.Inputs;
+using Domain.Graphql.Types.Results;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;
@@ -7,6 +9,74 @@ using HotChocolate.Resolvers;
 using Model.Entities;
 
 namespace Backend.Graphql.Mutations;
+
+public class Mutation
+{
+    
+    [Error(typeof(UsernameAlreadyExistsException))]
+    [Error(typeof(PasswordTooShortException))]
+    public RegistrationResult Registration(RegistrationInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    
+    [Error(typeof(UserNotFoundException))]
+    [Error(typeof(InvalidPasswordException))]
+    public LoginResult Login(LoginInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    [Error(typeof(UserNotFoundException))]
+    [Error(typeof(FollowingNotFoundException))]
+    public AddFollowResult AddFollow(AddFollowInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    [Error(typeof(UserNotFoundException))]
+    [Error(typeof(FollowingNotFoundException))]
+    public RemoveFollowResult RemoveFollow(RemoveFollowInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    [Error(typeof(UserNotFoundException))]
+    [Error(typeof(TagNotFoundException))]
+    public CreateYeetResult CreateYeet(CreateYeetInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    [Error(typeof(YeetNotFoundException))]
+    public DeleteYeetResult DeleteYeet(DeleteYeetInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    [Error(typeof(YeetNotFoundException))]
+    [Error(typeof(UserNotFoundException))]
+    public CreateYommentResult CreateYomment(CreateYommentInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    [Error(typeof(YommentNotFoundException))]
+    public DeleteYommentResult DeleteYomment(DeleteYommentInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    [Error(typeof(TagAlreadyExistsException))]
+    public CreateTagResult CreateTag(CreateTagInput input)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+
+/*
 
 public class Mutation
 {
@@ -84,3 +154,4 @@ public class Mutation
         return yeetId;
     }
 }
+*/
