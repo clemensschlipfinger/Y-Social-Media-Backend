@@ -206,26 +206,12 @@ enum SortTags {
 
 # Mutation
 
-interface Error {
-    message: String!
-}
-
 input RegistrationInput {
     username: String!
     firstName: String!
     lastName: String!
     password: String!
 }
-
-type UsernameAlreadyTakenError implements Error {
-    message: String!
-}
-
-type PasswordTooShortError implements Error {
-    message: String!
-}
-
-union RegistrationError = UsernameAlreadyTakenError | PasswordTooShortError
 
 type RegistrationResult {
     token: String
@@ -237,16 +223,6 @@ input LoginInput {
     username: String!
     password: String!
 }
-
-type UserNotFoundError implements Error {
-    message: String!
-}
-
-type InvalidPasswordError implements Error {
-    message: String!
-}
-
-union LoginError = UserNotFoundError | InvalidPasswordError
 
 type LoginResult {
     token: String
@@ -323,4 +299,109 @@ type CreateTagResult {
     tags: [Tag!]!
 }
 
+# Error
+
+interface Error {
+    message: String!
+}
+
+type UsernameAlreadyExistsError implements Error {
+    message: String!
+}
+
+type PasswordTooShortError implements Error {
+    message: String!
+}
+
+type UserNotFoundError implements Error {
+    message: String!
+}
+
+type InvalidPasswordError implements Error {
+    message: String!
+}
+
+type FollowingNotFoundError implements Error {
+    message: String!
+}
+
+type TagNotFoundError implements Error {
+    message: String!
+}
+
+type YeetNotFoundError implements Error {
+    message: String!
+}
+
+type YommentNotFoundError implements Error {
+    message: String!
+}
+
+type TagAlreadyExistsError implements Error {
+    message: String!
+}
+
 # Payload
+
+union RegistrationError = UsernameAlreadyTakenError | PasswordTooShortError
+
+type RegistrationPayload {
+    registrationResult: RegistrationResult!
+    errors: [RegistrationError!]
+}
+
+union LoginError = UserNotFoundError | InvalidPasswordError
+
+type LoginPayload {
+    loginResult: LoginResult!
+    errors: [LoginError!]
+}
+
+union AddFollowError = UserNotFoundError | FollowingNotFoundError
+
+type AddFollowPayload {
+    addFollowResult: AddFollowResult!
+    errors: [AddFollowError!]
+}
+
+union RemoveFollowError = UserNotFoundError | FollowingNotFoundError
+
+type RemoveFollowPayload {
+    removeFollowResult: RemoveFollowResult!
+    errors: [RemoveFollowError!]
+}
+
+union CreateYeetError = UserNotFoundError | TagNotFoundError
+
+type CreateYeetPayload {
+    createYeetResult: CreateYeetResult!
+    errors: [CreateYeetError!]
+}
+
+union DeleteYeetError = YeetNotFoundError
+
+type DeleteYeetPayload {
+    deleteYeetResult: DeleteYeetResult!
+    errors: [DeleteYeetError!]
+}
+
+union CreateYommentError = YeetNotFoundError | UserNotFoundError
+
+type CreateYommentPayload {
+    createYommentResult: CreateYommentResult!
+    errors: [CreateYommentError!]
+}
+
+union DeleteYommentError = YommentNotFoundError
+
+type DeleteYommentPayload {
+    deleteYommentResult: DeleteYommentResult!
+    errors: [DeleteYommentError!]
+}
+
+union CreateTagError = TagAlreadyExists
+
+type CreateTagPayload {
+    createTagResult: CreateTagResult!
+    errors: [CreateTagError!]
+}
