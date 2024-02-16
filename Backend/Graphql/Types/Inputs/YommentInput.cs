@@ -1,6 +1,6 @@
 namespace Backend.Graphql.Types.Inputs;
 
-public class YommentInput
+public record YommentInput
 {
     public int YommentId { get; init; }
 }

@@ -1,6 +1,6 @@
 namespace Backend.Graphql.Types.Inputs;
 
-public class DeleteYeetInput
+public record DeleteYeetInput
 {
     public int YeetId { get; set; }
 }

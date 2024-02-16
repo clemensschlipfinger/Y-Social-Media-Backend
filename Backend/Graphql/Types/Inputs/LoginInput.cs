@@ -1,6 +1,6 @@
 namespace Backend.Graphql.Types.Inputs;
 
-public class LoginInput
+public record LoginInput
 {
     public string Username { get; set; }
     public string Password { get; set; }

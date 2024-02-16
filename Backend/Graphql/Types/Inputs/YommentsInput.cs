@@ -1,6 +1,6 @@
 namespace Backend.Graphql.Types.Inputs;
 
-public class YommentsInput
+public record YommentsInput
 {
     public int YeetId { get; set; }
     public int Limit { get; set; }

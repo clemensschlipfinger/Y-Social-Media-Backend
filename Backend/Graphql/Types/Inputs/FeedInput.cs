@@ -1,6 +1,6 @@
 namespace Backend.Graphql.Types.Inputs;
 
-public class FeedInput
+public record FeedInput
 {
     public int UserId { get; set; }
     public int Limit { get; set; }

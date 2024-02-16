@@ -1,6 +1,6 @@
 namespace Backend.Graphql.Types.Inputs;
 
-public class YeetsInput
+public record YeetsInput
 {
     public int Limit { get; set; }
     public int Offset { get; set; }

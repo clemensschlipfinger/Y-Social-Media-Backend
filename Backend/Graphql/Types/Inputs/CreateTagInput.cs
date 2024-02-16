@@ -1,6 +1,6 @@
 namespace Backend.Graphql.Types.Inputs;
 
-public class CreateTagInput
+public record CreateTagInput
 {
     public string Name { get; set; }
 }

@@ -1,6 +1,6 @@
 namespace Backend.Graphql.Types.Inputs;
 
-public class CreateYeetInput
+public record CreateYeetInput
 {
     public int UserId { get; set; }
     public string Title { get; set; }
