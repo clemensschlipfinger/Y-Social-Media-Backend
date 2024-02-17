@@ -19,55 +19,55 @@ public abstract class ARepository<TEntity> : IRepository<TEntity> where TEntity 
         Table = Context.Set<TEntity>();
     }
 
-    public virtual IQueryable<TEntity> Read() {
-        return Table;
-    }
+    public async Task<TEntity?> ReadAsync(int id) => await Table.FindAsync(id);
+    public async Task<IEnumerable<TEntity>> ReadAsync() => await Table.ToListAsync();
 
-    public virtual async Task<TEntity?> ReadAsync(int id) {
-        return await Table.FindAsync(id);
-    }
+    public async Task<IEnumerable<TEntity>> ReadAsync(int limit, int offset) =>
+        await Table.Skip(offset).Take(limit).ToListAsync();
 
-    public virtual IQueryable<TEntity> Read(Expression<Func<TEntity, bool>> filter) {
-        return Table.Where(filter);
-    }
+    public async Task<IEnumerable<TEntity>> ReadAsync(Expression<Func<TEntity, bool>> filter) =>
+        await Table.Where(filter).ToListAsync();
 
-    public virtual async Task<TEntity> CreateAsync(TEntity course) {
+    public async Task<IEnumerable<TEntity>> ReadAsync(int limit, int offset, Expression<Func<TEntity, bool>> filter) =>
+        await Table.Where(filter).Skip(offset).Take(limit).ToListAsync();
+    
+    public async Task<TEntity> CreateAsync(TEntity course) {
         Table.Add(course);
         await Context.SaveChangesAsync();
         return course;
     }
 
-    public virtual async Task<List<TEntity>> CreateAsync(List<TEntity> entity) {
+    public async Task<List<TEntity>> CreateAsync(List<TEntity> entity) {
         Table.AddRange(entity);
         await Context.SaveChangesAsync();
         return entity;
     }
 
-    public virtual async Task UpdateAsync(TEntity entity) {
+    public async Task UpdateAsync(TEntity entity) {
         Context.ChangeTracker.Clear();
         Table.Update(entity);
         await Context.SaveChangesAsync();
     }
 
-    public virtual async Task UpdateAsync(IEnumerable<TEntity> entity) {
+    public async Task UpdateAsync(IEnumerable<TEntity> entity) {
         Context.ChangeTracker.Clear();
         Table.UpdateRange(entity);
         await Context.SaveChangesAsync();
     }
 
-    public virtual async Task DeleteAsync(TEntity entity) {
+    public async Task DeleteAsync(TEntity entity) {
         Context.ChangeTracker.Clear();
         Table.Remove(entity);
         await Context.SaveChangesAsync();
     }
 
-    public virtual async Task DeleteAsync(IEnumerable<TEntity> entity) {
+    public async Task DeleteAsync(IEnumerable<TEntity> entity) {
         Context.ChangeTracker.Clear();
         Table.RemoveRange(entity);
         await Context.SaveChangesAsync();
     }
 
-    public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> filter) {
+    public async Task DeleteAsync(Expression<Func<TEntity, bool>> filter) {
         Context.ChangeTracker.Clear();
         Table.RemoveRange(Table.Where(filter));
         await Context.SaveChangesAsync();

@@ -1,5 +1,6 @@
 ﻿using Domain.Graphql.Types.Inputs;
 using Domain.Graphql.Types.Results;
+using Model.Entities;
 
 namespace Domain.Services.Interfaces;
 
@@ -11,4 +12,6 @@ public interface IUserService
     Task<LoginResult> Login(LoginInput input);
     Task<AddFollowResult> AddFollow(AddFollowInput input);
     Task<RemoveFollowResult> RemoveFollow(RemoveFollowInput input);
+    Task<bool> IsAuthenticated(string password, User user);
+    Task<string> HashPassword(string password);
 }

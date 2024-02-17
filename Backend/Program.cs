@@ -2,7 +2,6 @@ using System.Text;
 using Backend.Graphql.Mutations;
 using Backend.Graphql.Query;
 using Backend.Identity;
-using Backend.Identity.Policies;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
 using HotChocolate.Authorization;
@@ -61,7 +60,6 @@ builder.Services.AddAuthorization(options =>
 */
 
 builder.Services.AddTransient<IJwtService, JwtService>();
-builder.Services.AddTransient<IUserService, UserService>();
 //builder.Services.AddTransient<IAuthorizationHandler, IsUserHandler>();
 
 builder.Services.AddControllers();

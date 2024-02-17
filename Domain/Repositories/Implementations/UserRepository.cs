@@ -35,6 +35,20 @@ public class UserRepository : ARepository<User>, IUserRepository
         };
     }
 
+    public async Task<Graphql.Types.User?> Read(string username)
+    {
+        var user = await Table.FirstOrDefaultAsync(u => u.Username == username);
+        if (user == null) return null;
+        var followers = (await _userFollowsRepository.GetFollowers(user.Id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
+        var following = (await _userFollowsRepository.GetFollowing(user.Id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
+        return new Graphql.Types.User
+        {
+            Id = user.Id, Username = user.Username, FirstName = user.FirstName, LastName = user.LastName,
+            FollowerCount = followers.Count(), FollowingCount = following.Count(), Follower = followers,
+            Following = following
+        };
+    }
+
     public async Task<List<Graphql.Types.User>> ReadAll()
     {
         var userInfos = await Table.ToListAsync();

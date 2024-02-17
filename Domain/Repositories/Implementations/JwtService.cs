@@ -1,19 +1,13 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using HotChocolate.Resolvers;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Backend.Identity;
+using Domain.Repositories.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Model.Entities;
 
-namespace Backend.Identity;
-
-public interface IJwtService
-{
-    string GenerateToken(User? user);
-}
+namespace Domain.Repositories.Implementations;
 
 public sealed class JwtService : IJwtService
 {
@@ -48,5 +42,3 @@ public sealed class JwtService : IJwtService
         return tokenHandler.WriteToken(token);
     }
 }
-
-

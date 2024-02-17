@@ -31,13 +31,14 @@ public class Mutation
     [Error(typeof(PasswordTooShortException))]
     public async Task<RegistrationResult> Registration(RegistrationInput input) => await _userService.Registration(input);
 
-    [Error(typeof(UserNotFoundException))]
+    [Error(typeof(UsernameNotFoundException))]
     [Error(typeof(InvalidPasswordException))]
     public async Task<LoginResult> Login(LoginInput input) => await _userService.Login(input);
 
     [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(FollowingNotFoundException))]
+    [Error(typeof(AlreadyFollowingException))]
     public async Task<AddFollowResult> AddFollow(AddFollowInput input) => await _userService.AddFollow(input);
 
     [Authorize]

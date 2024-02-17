@@ -6,8 +6,10 @@ namespace Domain.Repositories.Interfaces;
 
 public interface IRepository<TEntity> where TEntity : class {
     Task<TEntity?> ReadAsync(int id);
-    IQueryable<TEntity> Read(Expression<Func<TEntity, bool>> filter);
-    IQueryable<TEntity> Read();
+    Task<IEnumerable<TEntity>> ReadAsync();
+    Task<IEnumerable<TEntity>> ReadAsync(int limit, int offset);
+    Task<IEnumerable<TEntity>> ReadAsync(Expression<Func<TEntity, bool>> filter);
+    Task<IEnumerable<TEntity>> ReadAsync(int limit, int offset, Expression<Func<TEntity, bool>> filter);
     Task<TEntity> CreateAsync(TEntity entity);
     Task<List<TEntity>> CreateAsync(List<TEntity> entity);
     Task UpdateAsync(TEntity entity);
