@@ -8,8 +8,11 @@ using Model.Entities;
 
 namespace Domain.Repositories.Implementations;
 
-public class UserFollowsRepository(YDbContext context) : ARepository<UserFollowsUser>(context), IUserFollowsRepository
+public class UserFollowsRepository : ARepository<UserFollowsUser>, IUserFollowsRepository
 {
+    public UserFollowsRepository(YDbContext context) : base(context)
+    {
+    }
 
     public async Task<List<User>> GetFollowers(int userId)
         => await Table.Where((ufu) => ufu.FollowingId == userId)

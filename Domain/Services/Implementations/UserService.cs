@@ -7,8 +7,16 @@ using Model.Entities;
 
 namespace Domain.Services.Implementations;
 
-public class UserService(IUserRepository userRepository, IUserFollowsRepository userFollowsRepository) : IUserService
+public class UserService : IUserService
 {
+    private readonly IUserRepository _userRepository;
+    private readonly IUserFollowsRepository _userFollowsRepository;
+
+    public UserService(IUserRepository userRepository, IUserFollowsRepository userFollowsRepository)
+    {
+        _userRepository = userRepository;
+        _userFollowsRepository = userFollowsRepository;
+    }
     public UsersResult Users(UsersInput input)
     {
         throw new NotImplementedException();

@@ -7,8 +7,15 @@ using Model.Entities;
 
 namespace Domain.Repositories.Implementations;
 
-public class UserRepository(YDbContext context, IUserFollowsRepository userFollowsRepository) : ARepository<User>(context), IUserRepository
+public class UserRepository : ARepository<User>, IUserRepository
 {
+    private readonly UserFollowsRepository _userFollowsRepository;
+
+    public UserRepository(YDbContext context, UserFollowsRepository userFollowsRepository) : base(context)
+    {
+        _userFollowsRepository = userFollowsRepository;
+    }
+
     public async Task<bool> IsUsernameAvailable(string username)
     {
         return await Table.AllAsync(u => u.Username != username);
@@ -18,8 +25,8 @@ public class UserRepository(YDbContext context, IUserFollowsRepository userFollo
     {
         var user = await Table.FirstOrDefaultAsync(u => u.Id == id);
         if (user == null) return null;
-        var followers = (await userFollowsRepository.GetFollowers(id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
-        var following = (await userFollowsRepository.GetFollowing(id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
+        var followers = (await _userFollowsRepository.GetFollowers(id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
+        var following = (await _userFollowsRepository.GetFollowing(id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
         return new Graphql.Types.User
         {
             Id = user.Id, Username = user.Username, FirstName = user.FirstName, LastName = user.LastName,
@@ -35,8 +42,8 @@ public class UserRepository(YDbContext context, IUserFollowsRepository userFollo
         var users = new List<Graphql.Types.User>();
         foreach (var user in userInfos)
         {
-            var followers = (await userFollowsRepository.GetFollowers(user.Id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
-            var following = (await userFollowsRepository.GetFollowing(user.Id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
+            var followers = (await _userFollowsRepository.GetFollowers(user.Id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
+            var following = (await _userFollowsRepository.GetFollowing(user.Id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
             users.Add(new Graphql.Types.User
             {
                 Id = user.Id, Username = user.Username, FirstName = user.FirstName, LastName = user.LastName,
