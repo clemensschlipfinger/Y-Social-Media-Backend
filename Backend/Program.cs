@@ -4,6 +4,8 @@ using Backend.Graphql.Query;
 using Backend.Identity;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
+using Domain.Services.Implementations;
+using Domain.Services.Interfaces;
 using HotChocolate.Authorization;
 using HotChocolate.Resolvers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,13 +24,22 @@ builder.Services.AddDbContextFactory<YDbContext>(
     )
 );
 
-builder.Services.AddScoped<IYeetRepository, YeetRepository>();
-builder.Services.AddScoped<IUserFollowsRepository, UserFollowsRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRegexService, RegexService>();
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserFollowsRepository, UserFollowsRepository>();
+builder.Services.AddScoped<IYeetRepository, YeetRepository>();
+builder.Services.AddScoped<IYommentRepository, YommentRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
+
+builder.Services.AddScoped<IYeetService, YeetService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IYommentService, YommentService>();
 
 var jwtOptionsSection = builder.Configuration.GetRequiredSection("Jwt");
 builder.Services.Configure<JwtOptions>(jwtOptionsSection);
+builder.Services.AddTransient<IJwtService, JwtService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -59,7 +70,6 @@ builder.Services.AddAuthorization(options =>
 });
 */
 
-builder.Services.AddTransient<IJwtService, JwtService>();
 //builder.Services.AddTransient<IAuthorizationHandler, IsUserHandler>();
 
 builder.Services.AddControllers();

@@ -15,8 +15,6 @@ public class YDbContext : DbContext{
     public DbSet<UserFollowsUser> UserFriends { get; set; } = null!;
     public DbSet<YeetHasTags> YeetHasTags { get; set; } = null!;
     
-    
-    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserFollowsUser>()

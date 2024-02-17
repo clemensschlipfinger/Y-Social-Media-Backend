@@ -1,24 +1,43 @@
-﻿INSERT INTO users (username, first_name, last_name, password_hash)
-VALUES
-    ('user1', 'John', 'Doe', '$2a$10$Z2cEZ5JiyMbkEWsdHLTn2e1CFWDWS0tMIsFX7Od0/o.IX2M7LXa6O'), --password: password
-    ('user2', 'Jane', 'Smith', '$2a$10$Z2cEZ5JiyMbkEWsdHLTn2e1CFWDWS0tMIsFX7Od0/o.IX2M7LXa6O'),
-    ('user3', 'Bob', 'Johnson', '$2a$10$Z2cEZ5JiyMbkEWsdHLTn2e1CFWDWS0tMIsFX7Od0/o.IX2M7LXa6O');
+﻿truncate table user_follows_users_jt cascade;
+truncate table users cascade;
+truncate table yeet_has_tags cascade;
+truncate table yeets cascade;
+truncate table tags cascade;
+truncate table yomments cascade;
 
-INSERT INTO yeets (body, user_id, created_at)
-VALUES
-    ('This is my first yeet!', 1, '2023-12-01'),
-    ('Just yeeted again, feeling good!', 2, '2023-11-15'),
-    ('Yeet of the day!', 3, '2023-02-01');
+insert into users (user_id, username, first_name, last_name, password_hash) 
+values (1, 'clemens373', 'Clemens', 'Schlipfinger', '$2a$10$gqhcCliMddK5Q7hXPLXsr./sTXMkcEEc6yelta6GcVdLKdKBxPNcq'),
+       (2, 'trueberryless', 'Felix', 'Schneider', '$2a$10$gqhcCliMddK5Q7hXPLXsr./sTXMkcEEc6yelta6GcVdLKdKBxPNcq'),
+       (3, 'yanik007', 'Yanik', 'Latzka', '$2a$10$gqhcCliMddK5Q7hXPLXsr./sTXMkcEEc6yelta6GcVdLKdKBxPNcq');
 
-INSERT INTO user_likes_yeets_jt (user_id, yeet_id)
-VALUES
-    (1, 1),  -- User 1 likes Yeet 1
-    (1, 2),  -- User 1 likes Yeet 2
-    (2, 2),  -- User 2 likes Yeet 2
-    (3, 3);  -- User 3 likes Yeet 3
+insert into user_follows_users_jt (follower_id, following_id)
+values (1, 2),
+       (3, 2),
+       (3, 1);
 
-INSERT INTO user_follows_users_jt (slave_id, master_id)
-VALUES
-    (1, 2),  -- User 1 follows User 2
-    (2, 3),  -- User 2 follows User 3
-    (3, 1);  -- User 3 follows User 1
+insert into tags (tag_id, name)
+values (1, 'ice cream'),
+       (2, 'mountains'),
+       (3, 'politics'),
+       (4, 'domestic'),
+       (5, 'wizardry');
+
+insert into yeets (yeet_id, title, body, likes, created_at, user_id)
+values (1, 'Exciting Journey', 'Embarking on a new adventure. #mountains #nature', 0, current_timestamp, 2),
+       (2, 'Tech Innovations', 'Exploring the latest tech innovations. #technology #innovation', 0, current_timestamp, 3),
+       (3, 'Thought-provoking Read', 'Reading a thought-provoking book. #literature #philosophy', 0, current_timestamp, 1),
+       (4, 'Random Musings', 'Random thoughts and musings. #random #creative', 0, current_timestamp, 2);
+
+insert into yeet_has_tags (yeet_id, tag_id)
+values (1, 1),
+       (1, 2),
+       (2, 3),
+       (3, 2),
+       (3, 5);
+
+insert into yomments (yomment_id, yeet_id, body, likes, created_at, user_id)
+values (1, 1, 'Love the mountain vibes in this yeet!', 0, current_timestamp, 1),
+       (2, 1, 'Incredible tech advancements! Can"t wait to see the future.', 0, current_timestamp, 2),
+       (3, 2, 'What book are you reading? I"m looking for recommendations.', 0, current_timestamp, 3),
+       (4, 3, 'Great thoughts! Creativity knows no bounds.', 0, current_timestamp, 1),
+       (5, 3, 'The combination of #mountains and #wizardry is intriguing!', 0, current_timestamp, 2);

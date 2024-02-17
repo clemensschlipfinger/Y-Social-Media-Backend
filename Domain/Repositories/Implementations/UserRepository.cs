@@ -9,9 +9,9 @@ namespace Domain.Repositories.Implementations;
 
 public class UserRepository : ARepository<User>, IUserRepository
 {
-    private readonly UserFollowsRepository _userFollowsRepository;
+    private readonly IUserFollowsRepository _userFollowsRepository;
 
-    public UserRepository(YDbContext context, UserFollowsRepository userFollowsRepository) : base(context)
+    public UserRepository(YDbContext context, IUserFollowsRepository userFollowsRepository) : base(context)
     {
         _userFollowsRepository = userFollowsRepository;
     }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Model.Entities;
 
-[Table("tag")]
+[Table("tags")]
 public class Tag
 {
     [Column("tag_id")]

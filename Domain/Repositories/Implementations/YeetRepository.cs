@@ -10,9 +10,9 @@ namespace Domain.Repositories.Implementations;
 public class YeetRepository
     : ARepository<Yeet>, IYeetRepository
 {
-    private readonly UserFollowsRepository _userFollowsRepository;
+    private readonly IUserFollowsRepository _userFollowsRepository;
 
-    public YeetRepository(YDbContext context, UserFollowsRepository userFollowsRepository) : base(context)
+    public YeetRepository(YDbContext context, IUserFollowsRepository userFollowsRepository) : base(context)
     {
         _userFollowsRepository = userFollowsRepository;
     }
