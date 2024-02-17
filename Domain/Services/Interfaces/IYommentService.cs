@@ -5,8 +5,8 @@ namespace Domain.Services.Interfaces;
 
 public interface IYommentService
 {
-    YommentsResult Yomments(YommentsInput input);
-    YommentResult Yomment(YommentInput inpot);
-    CreateYommentResult CreateYomment(CreateYommentInput input);
-    DeleteYommentResult DeleteYomment(DeleteYommentInput input);
+    Task<YommentsResult> Yomments(YommentsInput input);
+    Task<YommentResult> Yomment(YommentInput inpot);
+    Task<CreateYommentResult> CreateYomment(CreateYommentInput input);
+    Task<DeleteYommentResult> DeleteYomment(DeleteYommentInput input);
 }

@@ -5,10 +5,10 @@ namespace Domain.Services.Interfaces;
 
 public interface IUserService
 {
-    UsersResult Users(UsersInput input);
-    UserResult User(UserInput input);
-    RegistrationResult Registration(RegistrationInput input);
-    LoginResult Login(LoginInput input);
+    Task<UsersResult> Users(UsersInput input);
+    Task<UserResult> User(UserInput input);
+    Task<RegistrationResult> Registration(RegistrationInput input);
+    Task<LoginResult> Login(LoginInput input);
     Task<AddFollowResult> AddFollow(AddFollowInput input);
-    RemoveFollowResult RemoveFollow(RemoveFollowInput input);
+    Task<RemoveFollowResult> RemoveFollow(RemoveFollowInput input);
 }

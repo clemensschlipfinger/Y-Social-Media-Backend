@@ -3,6 +3,7 @@ using Domain.Graphql.Types.Inputs;
 using Domain.Graphql.Types.Results;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
+using Domain.Services.Interfaces;
 using HotChocolate.Authorization;
 using Mapster;
 using Model.Entities;
@@ -10,57 +11,26 @@ using Model.Entities;
 namespace Backend.Graphql.Query;
 
 public class Query {
-    public UsersResult Users(UsersInput input)
-    {
-        // Implement your logic here
-        throw new NotImplementedException();
-    }
+    private readonly IUserService _userService;
+    private readonly IYeetService _yeetService;
+    private readonly IYommentService _yommentService;
+    private readonly ITagService _tagService;
 
-    public UserResult User(UserInput input)
+    public Query(IUserService userService, IYeetService yeetService, IYommentService yommentService, ITagService tagService)
     {
-        // Implement your logic here
-        throw new NotImplementedException();
+        _userService = userService;
+        _yeetService = yeetService;
+        _yommentService = yommentService;
+        _tagService = tagService;
     }
-
-    public YeetsResult Yeets(YeetsInput input)
-    {
-        // Implement your logic here
-        throw new NotImplementedException();
-    }
-
-    public YeetResult Yeet(YeetInput input)
-    {
-        // Implement your logic here
-        throw new NotImplementedException();
-    }
-
-    public FeedResult Feed(FeedInput input)
-    {
-        // Implement your logic here
-        throw new NotImplementedException();
-    }
-
-    public YommentsResult Yomments(YommentsInput input)
-    {
-        // Implement your logic here
-        throw new NotImplementedException();
-    }
-
-    public YommentResult Yomment(YommentInput input)
-    {
-        // Implement your logic here
-        throw new NotImplementedException();
-    }
-
-    public TagsResult Tags(TagsInput input)
-    {
-        // Implement your logic here
-        throw new NotImplementedException();
-    }
-
-    public TagResult Tag(TagInput input)
-    {
-        // Implement your logic here
-        throw new NotImplementedException();
-    }
+    
+    public async Task<UsersResult> Users(UsersInput input) => await _userService.Users(input);
+    public async Task<UserResult> User(UserInput input) => await _userService.User(input);
+    public async Task<YeetsResult> Yeets(YeetsInput input) => await _yeetService.Yeets(input);
+    public async Task<YeetResult> Yeet(YeetInput input) => await _yeetService.Yeet(input);
+    public async Task<FeedResult> Feed(FeedInput input) => await _yeetService.Feed(input);
+    public async Task<YommentsResult> Yomments(YommentsInput input) => await _yommentService.Yomments(input);
+    public async Task<YommentResult> Yomment(YommentInput input) => await _yommentService.Yomment(input);
+    public async Task<TagsResult> Tags(TagsInput input) => await _tagService.Tags(input);
+    public async Task<TagResult> Tag(TagInput input) => await _tagService.Tag(input);
 }

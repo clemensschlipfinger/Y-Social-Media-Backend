@@ -5,9 +5,9 @@ namespace Domain.Services.Interfaces;
 
 public interface IYeetService
 {
-    YeetsResult Yeets(YeetsInput input);
-    YeetResult Yeet(YeetInput input);
-    FeedResult Feed(FeedInput input);
-    CreateYeetResult CreateYeet(CreateYeetInput input);
-    DeleteYeetResult DeleteYeet(DeleteYeetInput input);
+    Task<YeetsResult> Yeets(YeetsInput input);
+    Task<YeetResult> Yeet(YeetInput input);
+    Task<FeedResult> Feed(FeedInput input);
+    Task<CreateYeetResult> CreateYeet(CreateYeetInput input);
+    Task<DeleteYeetResult> DeleteYeet(DeleteYeetInput input);
 }

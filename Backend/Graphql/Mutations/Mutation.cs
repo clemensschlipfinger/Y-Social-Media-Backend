@@ -4,82 +4,70 @@ using Domain.Graphql.Types.Inputs;
 using Domain.Graphql.Types.Results;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
+using Domain.Services.Interfaces;
 using HotChocolate.Authorization;
 using HotChocolate.Resolvers;
 using Model.Entities;
+using IUserService = Domain.Services.Interfaces.IUserService;
 
 namespace Backend.Graphql.Mutations;
 
 public class Mutation
 {
-    
+    private readonly IUserService _userService;
+    private readonly IYeetService _yeetService;
+    private readonly IYommentService _yommentService;
+    private readonly ITagService _tagService;
+
+    public Mutation(IUserService userService, IYeetService yeetService, IYommentService yommentService, ITagService tagService)
+    {
+        _userService = userService;
+        _yeetService = yeetService;
+        _yommentService = yommentService;
+        _tagService = tagService;
+    }
+
     [Error(typeof(UsernameAlreadyExistsException))]
     [Error(typeof(PasswordTooShortException))]
-    public RegistrationResult Registration(RegistrationInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<RegistrationResult> Registration(RegistrationInput input) => await _userService.Registration(input);
 
-    
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(InvalidPasswordException))]
-    public LoginResult Login(LoginInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<LoginResult> Login(LoginInput input) => await _userService.Login(input);
 
     [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(FollowingNotFoundException))]
-    public AddFollowResult AddFollow(AddFollowInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<AddFollowResult> AddFollow(AddFollowInput input) => await _userService.AddFollow(input);
 
     [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(FollowingNotFoundException))]
-    public RemoveFollowResult RemoveFollow(RemoveFollowInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<RemoveFollowResult> RemoveFollow(RemoveFollowInput input) => await _userService.RemoveFollow(input);
 
     [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(TagNotFoundException))]
-    public CreateYeetResult CreateYeet(CreateYeetInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<CreateYeetResult> CreateYeet(CreateYeetInput input) => await _yeetService.CreateYeet(input);
 
     [Authorize]
     [Error(typeof(YeetNotFoundException))]
-    public DeleteYeetResult DeleteYeet(DeleteYeetInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<DeleteYeetResult> DeleteYeet(DeleteYeetInput input) => await _yeetService.DeleteYeet(input);
 
     [Authorize]
     [Error(typeof(YeetNotFoundException))]
     [Error(typeof(UserNotFoundException))]
-    public CreateYommentResult CreateYomment(CreateYommentInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<CreateYommentResult> CreateYomment(CreateYommentInput input) =>
+        await _yommentService.CreateYomment(input);
 
     [Authorize]
     [Error(typeof(YommentNotFoundException))]
-    public DeleteYommentResult DeleteYomment(DeleteYommentInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<DeleteYommentResult> DeleteYomment(DeleteYommentInput input) =>
+        await _yommentService.DeleteYomment(input);
 
     [Authorize]
     [Error(typeof(TagAlreadyExistsException))]
-    public CreateTagResult CreateTag(CreateTagInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<CreateTagResult> CreateTag(CreateTagInput input) => await _tagService.CreateTag(input);
 }
 
 

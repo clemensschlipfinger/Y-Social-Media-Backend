@@ -6,27 +6,27 @@ namespace Domain.Services.Implementations;
 
 public class YeetService : IYeetService
 {
-    public YeetsResult Yeets(YeetsInput input)
+    public async Task<YeetsResult> Yeets(YeetsInput input)
     {
         throw new NotImplementedException();
     }
 
-    public YeetResult Yeet(YeetInput input)
+    public async Task<YeetResult> Yeet(YeetInput input)
     {
         throw new NotImplementedException();
     }
 
-    public FeedResult Feed(FeedInput input)
+    public async Task<FeedResult> Feed(FeedInput input)
     {
         throw new NotImplementedException();
     }
 
-    public CreateYeetResult CreateYeet(CreateYeetInput input)
+    public async Task<CreateYeetResult> CreateYeet(CreateYeetInput input)
     {
         throw new NotImplementedException();
     }
 
-    public DeleteYeetResult DeleteYeet(DeleteYeetInput input)
+    public async Task<DeleteYeetResult> DeleteYeet(DeleteYeetInput input)
     {
         throw new NotImplementedException();
     }

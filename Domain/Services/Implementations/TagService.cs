@@ -6,17 +6,17 @@ namespace Domain.Services.Implementations;
 
 public class TagService : ITagService
 {
-    public TagsResult Tags(TagsInput input)
+    public async Task<TagsResult> Tags(TagsInput input)
     {
         throw new NotImplementedException();
     }
 
-    public TagResult Tag(TagInput input)
+    public async Task<TagResult> Tag(TagInput input)
     {
         throw new NotImplementedException();
     }
 
-    public CreateTagResult CreateTag(CreateTagInput input)
+    public async Task<CreateTagResult> CreateTag(CreateTagInput input)
     {
         throw new NotImplementedException();
     }

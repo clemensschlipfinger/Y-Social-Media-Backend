@@ -6,22 +6,22 @@ namespace Domain.Services.Implementations;
 
 public class YommentService : IYommentService
 {
-    public YommentsResult Yomments(YommentsInput input)
+    public async Task<YommentsResult> Yomments(YommentsInput input)
     {
         throw new NotImplementedException();
     }
 
-    public YommentResult Yomment(YommentInput inpot)
+    public async Task<YommentResult> Yomment(YommentInput inpot)
     {
         throw new NotImplementedException();
     }
 
-    public CreateYommentResult CreateYomment(CreateYommentInput input)
+    public async Task<CreateYommentResult> CreateYomment(CreateYommentInput input)
     {
         throw new NotImplementedException();
     }
 
-    public DeleteYommentResult DeleteYomment(DeleteYommentInput input)
+    public async Task<DeleteYommentResult> DeleteYomment(DeleteYommentInput input)
     {
         throw new NotImplementedException();
     }

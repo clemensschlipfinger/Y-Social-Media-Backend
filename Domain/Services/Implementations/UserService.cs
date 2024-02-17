@@ -17,22 +17,22 @@ public class UserService : IUserService
         _userRepository = userRepository;
         _userFollowsRepository = userFollowsRepository;
     }
-    public UsersResult Users(UsersInput input)
+    public async Task<UsersResult> Users(UsersInput input)
     {
         throw new NotImplementedException();
     }
 
-    public UserResult User(UserInput input)
+    public async Task<UserResult> User(UserInput input)
     {
         throw new NotImplementedException();
     }
 
-    public RegistrationResult Registration(RegistrationInput input)
+    public async Task<RegistrationResult> Registration(RegistrationInput input)
     {
         throw new NotImplementedException();
     }
 
-    public LoginResult Login(LoginInput input)
+    public async Task<LoginResult> Login(LoginInput input)
     {
         throw new NotImplementedException();
     }
@@ -60,7 +60,7 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public RemoveFollowResult RemoveFollow(RemoveFollowInput input)
+    public async Task<RemoveFollowResult> RemoveFollow(RemoveFollowInput input)
     {
         throw new NotImplementedException();
     }

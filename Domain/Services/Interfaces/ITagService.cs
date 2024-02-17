@@ -5,7 +5,7 @@ namespace Domain.Services.Interfaces;
 
 public interface ITagService
 {
-    TagsResult Tags(TagsInput input);
-    TagResult Tag(TagInput input);
-    CreateTagResult CreateTag(CreateTagInput input);
+    Task<TagsResult> Tags(TagsInput input);
+    Task<TagResult> Tag(TagInput input);
+    Task<CreateTagResult> CreateTag(CreateTagInput input);
 }
