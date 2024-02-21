@@ -6,5 +6,5 @@ public record UsersInput
     public int Offset { get; set; }
     public SortUsers Sorting { get; set; }
     public SortDirection Direction { get; set; } = SortDirection.ASC;
-    public string Filter { get; set; }
+    public string? Filter { get; set; }
 }

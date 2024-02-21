@@ -1,4 +1,4 @@
-namespace Backend.Identity;
+namespace Domain.Services.ValueTypes;
 
 public class JwtOptions
 {

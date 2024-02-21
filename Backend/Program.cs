@@ -1,20 +1,15 @@
 using System.Text;
 using Backend.Graphql.Mutations;
 using Backend.Graphql.Query;
-using Backend.Identity;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
 using Domain.Services.Implementations;
 using Domain.Services.Interfaces;
-using HotChocolate.Authorization;
-using HotChocolate.Resolvers;
+using Domain.Services.ValueTypes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.IdentityModel.Tokens;
 using Model.Configuration;
-using Model.Entities;
-using IAuthorizationHandler = Microsoft.AspNetCore.Authorization.IAuthorizationHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +71,7 @@ builder.Services.AddControllers();
 
 builder.Services
     .AddGraphQLServer()
+    .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = builder.Environment.IsDevelopment())
     .AddAuthorization()
     .AddMutationType<Mutation>()
     .AddMutationConventions(applyToAllMutations: true)
@@ -92,7 +88,8 @@ app.MapGraphQL();
 app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()
-    .AllowAnyHeader());
+    .AllowAnyHeader()
+);
 
 var scope = app.Services.CreateScope();  
 using var dbContext = scope.ServiceProvider.GetRequiredService<YDbContext>();

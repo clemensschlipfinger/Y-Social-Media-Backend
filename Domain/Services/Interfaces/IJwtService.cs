@@ -1,6 +1,6 @@
 ﻿using Model.Entities;
 
-namespace Domain.Repositories.Interfaces;
+namespace Domain.Services.Interfaces;
 
 public interface IJwtService
 {

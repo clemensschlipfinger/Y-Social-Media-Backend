@@ -6,7 +6,7 @@ truncate table tags cascade;
 truncate table yomments cascade;
 
 insert into users (user_id, username, first_name, last_name, password_hash) 
-values (1, 'clemens373', 'Clemens', 'Schlipfinger', '$2a$10$gqhcCliMddK5Q7hXPLXsr./sTXMkcEEc6yelta6GcVdLKdKBxPNcq'),
+values (1, 'clemens373', 'Clemens', 'Schlipfinger', '$2a$12$LRDbhXnPTk5yQOd6aU8vUegFtKraLOyygBLr552UNdPPx90e9MGZi'),
        (2, 'trueberryless', 'Felix', 'Schneider', '$2a$10$gqhcCliMddK5Q7hXPLXsr./sTXMkcEEc6yelta6GcVdLKdKBxPNcq'),
        (3, 'yanik007', 'Yanik', 'Latzka', '$2a$10$gqhcCliMddK5Q7hXPLXsr./sTXMkcEEc6yelta6GcVdLKdKBxPNcq');
 

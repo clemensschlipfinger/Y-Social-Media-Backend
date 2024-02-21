@@ -1,13 +1,14 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Backend.Identity;
 using Domain.Repositories.Interfaces;
+using Domain.Services.Interfaces;
+using Domain.Services.ValueTypes;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Model.Entities;
 
-namespace Domain.Repositories.Implementations;
+namespace Domain.Services.Implementations;
 
 public sealed class JwtService : IJwtService
 {

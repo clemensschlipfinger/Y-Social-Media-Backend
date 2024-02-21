@@ -61,8 +61,6 @@ public class TagService : ITagService
             Name = input.Name
         };
         var result = await _tagRepository.CreateAsync(tag);
-        var tags = (await _tagRepository.ReadAsync()).ToList();
-        return new CreateTagResult(result.Adapt<Graphql.Types.Tag>(),
-            tags.Select(t => t.Adapt<Graphql.Types.Tag>()).ToList());
+        return new CreateTagResult(result.Adapt<Graphql.Types.Tag>(), await _tagRepository.ReadTags());
     }
 }

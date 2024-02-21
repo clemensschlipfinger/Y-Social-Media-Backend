@@ -1,4 +1,3 @@
-using Backend.Identity;
 using Domain.Graphql.Types.Exceptions;
 using Domain.Graphql.Types.Inputs;
 using Domain.Graphql.Types.Results;
@@ -31,7 +30,8 @@ public class Mutation
     [Error(typeof(PasswordTooShortException))]
     public async Task<RegistrationResult> Registration(RegistrationInput input) => await _userService.Registration(input);
 
-    [Error(typeof(UsernameNotFoundException))]
+    
+    [Error(typeof(UsernameNotFoundException))] 
     [Error(typeof(InvalidPasswordException))]
     public async Task<LoginResult> Login(LoginInput input) => await _userService.Login(input);
 

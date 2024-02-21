@@ -27,11 +27,15 @@ public class UserService : IUserService
     public async Task<UsersResult> Users(UsersInput input)
     {
         var users = await _userRepository.ReadAll();
-        users = users.Where(u =>
+        if (input.Filter is not null)
+        {
+            users = users.Where(u =>
                 _regexService.Matches(input.Filter, u.Username) ||
                 _regexService.Matches(input.Filter, u.FirstName) ||
                 _regexService.Matches(input.Filter, u.LastName))
             .ToList();
+        }
+        
         users.Sort(delegate(Graphql.Types.User x, Graphql.Types.User y)
         {
             switch (input.Sorting)
@@ -98,21 +102,31 @@ public class UserService : IUserService
 
         await _userRepository.CreateAsync(user);
         var tokenString = _jwtService.GenerateToken(user);
-        return new RegistrationResult(tokenString, user.Adapt<Graphql.Types.User>());
+        
+        var graphqlUser = await _userRepository.Read(user);
+        if (graphqlUser is null)
+            throw new Exception("oh no no no!");
+        
+        return new RegistrationResult(tokenString, graphqlUser);
     }
 
     public async Task<LoginResult> Login(LoginInput input)
     {
-        var user = await _userRepository.Read(input.Username);
+        var user = await _userRepository.ReadForAuth(input.Username);
         
         if (user == null)
             throw new UsernameNotFoundException(input.Username);
 
-        if (!await IsAuthenticated(input.Password, user.Adapt<User>()))
+        if (!await IsAuthenticated(input.Password, user))
             throw new InvalidPasswordException();
 
-        var tokenString = _jwtService.GenerateToken(user.Adapt<User>());
-        return new LoginResult(tokenString, user);
+        var tokenString = _jwtService.GenerateToken(user);
+            
+        var graphqlUser = await _userRepository.Read(user);
+        if (graphqlUser is null)
+            throw new Exception("oh no no no!");
+        
+        return new LoginResult(tokenString, graphqlUser);
     }
 
     public async Task<AddFollowResult> AddFollow(AddFollowInput input)
