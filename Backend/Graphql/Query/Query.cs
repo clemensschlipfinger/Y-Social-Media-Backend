@@ -16,7 +16,6 @@ public class Query {
     
     public async Task<UsersResult> Users(UsersInput input, IUserService userService) => await userService.Users(input);
     
-    [Error(typeof(UserNotFoundException))]
     public async Task<UserResult> User(UserInput input, IUserService userService ) => await userService.User(input);
     
     /*
@@ -32,9 +31,8 @@ public class Query {
     [Error(typeof(YommentNotFoundException))]
     public async Task<YommentResult> Yomment(YommentInput input) => await _yommentService.Yomment(input);
     
-    public async Task<TagsResult> Tags(TagsInput input) => await _tagService.Tags(input);
-    
-    [Error(typeof(TagNotFoundException))]
-    public async Task<TagResult> Tag(TagInput input) => await _tagService.Tag(input);
     */
+    public async Task<TagsResult> Tags(TagsInput input, ITagService tagService) => await tagService.Tags(input);
+    
+    public async Task<TagResult> Tag(TagInput input, ITagService tagService) => await tagService.Tag(input);
 }

@@ -28,14 +28,22 @@ public class Mutation
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(FollowingNotFoundException))]
     [Error(typeof(AlreadyFollowingException))]
-    public async Task<AddFollowResult> AddFollow(AddFollowInput input, IUserService userService) =>
-        await userService.AddFollow(input);
+    public async Task<AddFollowResult> AddFollow([GlobalState("UserId")] int userId, AddFollowInput input,
+        IUserService userService)
+    {
+        input.UserId = userId;
+        return await userService.AddFollow(input);
+    }
 
     [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(FollowingNotFoundException))]
-    public async Task<RemoveFollowResult> RemoveFollow(RemoveFollowInput input, IUserService userService) =>
-        await userService.RemoveFollow(input);
+    public async Task<RemoveFollowResult> RemoveFollow([GlobalState("UserId")] int userId, RemoveFollowInput input,
+        IUserService userService)
+    {
+        input.UserId = userId;
+        return await userService.RemoveFollow(input);
+    }
 
 /*
     [Authorize]
@@ -57,76 +65,9 @@ public class Mutation
     [Error(typeof(YommentNotFoundException))]
     public async Task<DeleteYommentResult> DeleteYomment(DeleteYommentInput input) =>
         await _yommentService.DeleteYomment(input);
+        */
 
     [Authorize]
     [Error(typeof(TagAlreadyExistsException))]
-    public async Task<CreateTagResult> CreateTag(CreateTagInput input) => await _tagService.CreateTag(input);
-    */
+    public async Task<CreateTagResult> CreateTag(CreateTagInput input, ITagService tagService) => await tagService.CreateTag(input);
 }
-
-/*
-
-public class Mutation
-{
-    [Authorize]
-    public async Task<User> AddFollow(int followingId, int followerId, [Service] IUserFollowsRepository ufuRepo, [Service] IUserRepository userRepo)
-    {
-
-    }
-
-    [Error(typeof(UserNotFoundException))]
-    [Error(typeof(InvalidPasswordException))]
-    public async Task<TokenResponse> Login(string username, string password, [Service] IJwtService jwtService, [Service] IUserService userService)
-    {
-        var storedUser = await userService.GetUser(username);
-        if (storedUser == null)
-            throw new UserNotFoundException(username);
-
-        if (!userService.IsAuthenticated(password, storedUser))
-            throw new InvalidPasswordException();
-
-        var tokenString = jwtService.GenerateToken(storedUser);
-        return new TokenResponse(tokenString, storedUser);
-    }
-
-    [Error(typeof(UsernameAlreadyExistsException))]
-    [Error(typeof(PasswordTooShortException))]
-    public async Task<User> Registration(string username, string firstname, string lastname, string password,
-        [Service] IUserRepository userRepo, [Service] IUserService userService) {
-        if (!userRepo.IsUsernameAvailable(username).Result)
-            throw new UsernameAlreadyExistsException(username);
-
-        if (password.Length < 8)
-            throw new PasswordTooShortException();
-
-        var user = new User {
-            Username = username,
-            PasswordHash = userService.HashPassword(password),
-            FirstName = firstname,
-            LastName = lastname
-        };
-
-        await userRepo.CreateAsync(user);
-
-        return user;
-    }
-
-    public async Task<Yeet> CreateYeet(int userId, string text,[Service] IYeetRepository yeetRepo)
-    {
-        var yeet = new Yeet
-        {
-            Body = text,
-            CreatedAt = DateTime.Now.ToUniversalTime(),
-            UserId = userId
-        };
-
-        return await yeetRepo.CreateAsync(yeet);
-    }
-
-    public async Task<int> DeleteYeet(int yeetId, [Service] IYeetRepository yeetRepo)
-    {
-        await yeetRepo.DeleteAsync(y => y.Id == yeetId);
-        return yeetId;
-    }
-}
-*/

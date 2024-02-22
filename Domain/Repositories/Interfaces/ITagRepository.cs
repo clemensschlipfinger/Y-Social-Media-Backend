@@ -1,11 +1,13 @@
-﻿using Model.Entities;
+﻿using Domain.Graphql.Types.Inputs;
+using Domain.Graphql.Types.Results;
+using Model.Entities;
 
 namespace Domain.Repositories.Interfaces;
 
 public interface ITagRepository : IRepository<Tag>
 {
-    Task<Graphql.Types.Tag?> ReadTag(int id);
+    Task<TagResult> ReadTag(TagInput input);
 
-    Task<List<Graphql.Types.Tag>> ReadTags();
-    
+    Task<TagsResult> ReadTags(TagsInput input);
+    Task<List<Graphql.Types.Tag>> ReadAllGraphqlTag();
 }

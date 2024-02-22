@@ -6,5 +6,5 @@ public record TagsInput
     public int Offset { get; set; }
     public SortTags Sorting { get; set; }
     public SortDirection Direction { get; set; } = SortDirection.ASC;
-    public string Filter { get; set; }
+    public string? Filter { get; set; }
 }

@@ -108,19 +108,18 @@ public class UserService : IUserService
         if (!await _userFollowsRepository.IsFollowing(input.FollowingId, input.UserId))
             throw new NeverFollowedException(follower.Username, following.Username);
         
-        await _userFollowsRepository.DeleteAsync(f => f.FollowingId == following.Id && f.FollowerId == follower.Id);
-
+        await _userFollowsRepository.DeleteAsync(f => f.FollowingId == following.Id && f.FollowerId == follower.Id); 
         return new RemoveFollowResult(follower.Following.Count - 1, follower.Follower.Count);
     }
     
-    public async Task<string> HashPassword(string password) {
+    public Task<string> HashPassword(string password) {
         ArgumentNullException.ThrowIfNull(password);
-        return BCrypt.Net.BCrypt.HashPassword(password);
+        return Task.FromResult(BCrypt.Net.BCrypt.HashPassword(password));
     }
     
-    public async Task<bool> IsAuthenticated(string password, User user) {
+    public Task<bool> IsAuthenticated(string password, User user) {
         ArgumentNullException.ThrowIfNull(password);
         ArgumentNullException.ThrowIfNull(user);
-        return BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+        return Task.FromResult(BCrypt.Net.BCrypt.Verify(password, user.PasswordHash));
     }
 }

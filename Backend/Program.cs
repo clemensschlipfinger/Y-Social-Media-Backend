@@ -1,4 +1,5 @@
 using System.Text;
+using Backend.Graphql;
 using Backend.Graphql.Mutations;
 using Backend.Graphql.Query;
 using Domain.Graphql.Types;
@@ -23,17 +24,17 @@ builder.Services.AddPooledDbContextFactory<YDbContext>(
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserFollowsRepository, UserFollowsRepository>();
+builder.Services.AddTransient<ITagRepository, TagRepository>();
 /*
 builder.Services.AddScoped<IYeetRepository, YeetRepository>();
 builder.Services.AddScoped<IYommentRepository, YommentRepository>();
-builder.Services.AddScoped<ITagRepository, TagRepository>();
 */
 
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ITagService, TagService>();
 
 /*
 builder.Services.AddScoped<IYeetService, YeetService>();
-builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IYommentService, YommentService>();
 */
 
@@ -72,6 +73,8 @@ builder.Services
     .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = builder.Environment.IsDevelopment())
     .AddMutationConventions(applyToAllMutations: true)
     .RegisterService<IUserService>()
+    .RegisterService<ITagService>()
+    .AddHttpRequestInterceptor<GetUserIdInterceptor>()
     .AddMutationType<Mutation>()
     .AddQueryType<Query>();
 

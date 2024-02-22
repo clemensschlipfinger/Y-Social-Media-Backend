@@ -60,8 +60,6 @@ public class UserRepository : ARepository<User>, IUserRepository
     public async Task<UserResult> ReadUser(UserInput input)
     {
         var user = await ReadGraphqlUser(input.UserId);
-        if (user is null)
-            throw new UserNotFoundException(input.UserId);
         return new UserResult(user);
     }
 
