@@ -1,24 +1,32 @@
 ﻿using Domain.Graphql.Types.Inputs;
 using Domain.Graphql.Types.Results;
+using Domain.Repositories.Interfaces;
 using Domain.Services.Interfaces;
 
 namespace Domain.Services.Implementations;
 
 public class YeetService : IYeetService
 {
-    public async Task<YeetsResult> Yeets(YeetsInput input)
+    private IYeetRepository _yeetRepository;
+
+    public YeetService(IYeetRepository yeetRepository)
     {
-        throw new NotImplementedException();
+        _yeetRepository = yeetRepository;
     }
 
-    public async Task<YeetResult> Yeet(YeetInput input)
+    public Task<YeetsResult> Yeets(YeetsInput input)
     {
-        throw new NotImplementedException();
+        return _yeetRepository.ReadYeets(input);
     }
 
-    public async Task<FeedResult> Feed(FeedInput input)
+    public Task<YeetResult> Yeet(YeetInput input)
     {
-        throw new NotImplementedException();
+        return _yeetRepository.ReadYeet(input);
+    }
+
+    public Task<FeedResult> Feed(FeedInput input)
+    {
+        return _yeetRepository.ReadFeed(input);
     }
 
     public async Task<CreateYeetResult> CreateYeet(CreateYeetInput input)

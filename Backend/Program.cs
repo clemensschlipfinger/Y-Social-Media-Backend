@@ -25,20 +25,21 @@ builder.Services.AddPooledDbContextFactory<YDbContext>(
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserFollowsRepository, UserFollowsRepository>();
 builder.Services.AddTransient<ITagRepository, TagRepository>();
+builder.Services.AddTransient<IYeetRepository, YeetRepository>();
 /*
-builder.Services.AddScoped<IYeetRepository, YeetRepository>();
 builder.Services.AddScoped<IYommentRepository, YommentRepository>();
 */
 
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ITagService, TagService>();
+builder.Services.AddTransient<IYeetService, YeetService>();
 
 /*
-builder.Services.AddScoped<IYeetService, YeetService>();
 builder.Services.AddScoped<IYommentService, YommentService>();
 */
 
 builder.Services.AddTransient<FromMapper<Model.Entities.User, User>, MapUser>();
+builder.Services.AddTransient<FromMapper<Model.Entities.Yeet, Yeet>, MapYeet>();
 
 var jwtOptionsSection = builder.Configuration.GetRequiredSection("Jwt");
 builder.Services.Configure<JwtOptions>(jwtOptionsSection);
@@ -74,6 +75,7 @@ builder.Services
     .AddMutationConventions(applyToAllMutations: true)
     .RegisterService<IUserService>()
     .RegisterService<ITagService>()
+    .RegisterService<IYeetService>()
     .AddHttpRequestInterceptor<GetUserIdInterceptor>()
     .AddMutationType<Mutation>()
     .AddQueryType<Query>();

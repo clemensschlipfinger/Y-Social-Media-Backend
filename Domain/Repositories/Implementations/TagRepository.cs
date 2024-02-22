@@ -18,6 +18,8 @@ public class TagRepository : ARepository<Tag>, ITagRepository
     public async Task<TagResult> ReadTag(TagInput input)
     {
         var tag = await Table.FirstOrDefaultAsync(t => t.Id == input.TagId);
+        if (tag is null) { return new TagResult(null); }
+        
         return new TagResult(tag.Adapt<Graphql.Types.Tag>());
     }
 

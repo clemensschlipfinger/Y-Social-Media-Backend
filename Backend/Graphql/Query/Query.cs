@@ -17,15 +17,18 @@ public class Query {
     public async Task<UsersResult> Users(UsersInput input, IUserService userService) => await userService.Users(input);
     
     public async Task<UserResult> User(UserInput input, IUserService userService ) => await userService.User(input);
-    
-    /*
-    public async Task<YeetsResult> Yeets(YeetsInput input) => await _yeetService.Yeets(input);
+    public async Task<YeetsResult> Yeets(YeetsInput input, IYeetService yeetService) => await yeetService.Yeets(input);
     
     [Error(typeof(YeetNotFoundException))]
-    public async Task<YeetResult> Yeet(YeetInput input) => await _yeetService.Yeet(input);
+    public async Task<YeetResult> Yeet(YeetInput input, IYeetService yeetService) => await yeetService.Yeet(input);
+
+    public async Task<FeedResult> Feed([GlobalState("UserId")] int userId, FeedInput input, IYeetService yeetService)
+    {
+        input.UserId = userId; 
+        return await yeetService.Feed(input);
+    }
     
-    public async Task<FeedResult> Feed(FeedInput input) => await _yeetService.Feed(input);
-    
+    /*
     public async Task<YommentsResult> Yomments(YommentsInput input) => await _yommentService.Yomments(input);
     
     [Error(typeof(YommentNotFoundException))]

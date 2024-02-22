@@ -1,4 +1,7 @@
 using System.Linq.Expressions;
+using Domain.Graphql.Types.Inputs;
+using Domain.Graphql.Types.Results;
+using Domain.Mapper;
 using Domain.Repositories.Interfaces;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
@@ -10,64 +13,28 @@ namespace Domain.Repositories.Implementations;
 public class YeetRepository
     : ARepository<Yeet>, IYeetRepository
 {
-    private readonly IUserFollowsRepository _userFollowsRepository;
-    public YeetRepository(IDbContextFactory<YDbContext> dbContextFactory) : base(dbContextFactory)
+    private readonly FromMapper<Yeet, Graphql.Types.Yeet> mapper;
+
+    public YeetRepository(IDbContextFactory<YDbContext> dbContextFactory, FromMapper<Yeet, Graphql.Types.Yeet> mapper) : base(dbContextFactory)
     {
+        this.mapper = mapper;
     }
 
-
-    public async Task<Graphql.Types.Yeet?> ReadYeet(int id)
+    public Task<YeetsResult> ReadYeets(YeetsInput input)
     {
-        var yeet = (await Table.Include(y => y.User)
-            .Include(y => y.Yomments)
-            .Include(y => y.Tags)
-            .FirstOrDefaultAsync(y => y.Id == id));
-        if (yeet == null) return null;
-        return adaptFromYeet(yeet);
+        throw new NotImplementedException();
     }
 
-    public async Task<List<Graphql.Types.Yeet>> ReadYeets(int userId, int skip, int count)
+    public async Task<YeetResult> ReadYeet(YeetInput input)
     {
-        var yeets = await Table.Include(y => y.User)
-            .Include(y => y.Yomments)
-            .Include(y => y.Tags)
-            .Where(y => y.UserId == userId)
-            .Include(y => y.User)
-            .Skip(skip)
-            .Take(count)
-            .ToListAsync();
+        var yeet = await Table.FirstOrDefaultAsync(t => t.Id == input.YeetId);
+        if (yeet is null) { return new YeetResult(null); }
         
-        return yeets.Select(adaptFromYeet).ToList();
+        return new YeetResult(mapper.mapFrom(yeet));
     }
 
-    public async Task<List<Graphql.Types.Yeet>> ReadFeed(int userId, int skip, int count)
+    public Task<FeedResult> ReadFeed(FeedInput input)
     {
-        var usersIds = (await _userFollowsRepository.GetFollowing(userId)).Select(u => u.Id).ToList();
-        var yeets = await Table
-            .Where(y => usersIds.Contains(y.UserId))
-            .OrderByDescending(y => y.CreatedAt)
-            .Skip(skip)
-            .Take(count)
-            .Include(u => u.User)
-            .ToListAsync();
-
-        return yeets.Select(adaptFromYeet).ToList();
+        throw new NotImplementedException();
     }
-
-    private Graphql.Types.Yeet adaptFromYeet(Yeet yeet)
-    {
-        return new Graphql.Types.Yeet()
-        {
-            Id = yeet.Id,
-            Title = yeet.Title,
-            Body = yeet.Body,
-            CreatedAt = yeet.CreatedAt,
-            Likes = yeet.Likes,
-            UserId = yeet.UserId,
-            User = yeet.User.Adapt<Graphql.Types.User>(),
-            Yomments = yeet.Yomments.Select(y => y.Adapt<Graphql.Types.Yomment>()).ToList(),
-            Tags = yeet.Tags.Select(y => y.Tag.Adapt<Graphql.Types.Tag>()).ToList()
-        };
-    }
-
 }
