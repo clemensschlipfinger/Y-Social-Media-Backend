@@ -11,11 +11,10 @@ public class YeetRepository
     : ARepository<Yeet>, IYeetRepository
 {
     private readonly IUserFollowsRepository _userFollowsRepository;
-
-    public YeetRepository(YDbContext context, IUserFollowsRepository userFollowsRepository) : base(context)
+    public YeetRepository(IDbContextFactory<YDbContext> dbContextFactory) : base(dbContextFactory)
     {
-        _userFollowsRepository = userFollowsRepository;
     }
+
 
     public async Task<Graphql.Types.Yeet?> ReadYeet(int id)
     {
@@ -70,4 +69,5 @@ public class YeetRepository
             Tags = yeet.Tags.Select(y => y.Tag.Adapt<Graphql.Types.Tag>()).ToList()
         };
     }
+
 }

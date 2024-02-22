@@ -22,12 +22,12 @@ public class YDbContext : DbContext{
         
         modelBuilder.Entity<UserFollowsUser>()
             .HasOne(ufu => ufu.Following)
-            .WithMany()
+            .WithMany(u => u.Follower)
             .HasForeignKey(ufu => ufu.FollowingId);
         
         modelBuilder.Entity<UserFollowsUser>()
             .HasOne(ufu => ufu.Follower)
-            .WithMany()
+            .WithMany(u => u.Following)
             .HasForeignKey(ufu => ufu.FollowerId);
         
         modelBuilder.Entity<Yeet>()

@@ -10,12 +10,12 @@ using Model.Configuration;
 
 namespace Domain.Repositories.Implementations;
 
-public abstract class ARepository<TEntity> : IRepository<TEntity> where TEntity : class {
+public abstract class ARepository<TEntity> : IAsyncDisposable, IRepository<TEntity> where TEntity : class  {
     protected readonly YDbContext Context;
     protected readonly DbSet<TEntity> Table;
 
-    protected ARepository(YDbContext context) {
-        Context = context;
+    protected ARepository(IDbContextFactory<YDbContext> dbContextFactory) {
+        Context = dbContextFactory.CreateDbContext();
         Table = Context.Set<TEntity>();
     }
 
@@ -71,5 +71,10 @@ public abstract class ARepository<TEntity> : IRepository<TEntity> where TEntity 
         Context.ChangeTracker.Clear();
         Table.RemoveRange(Table.Where(filter));
         await Context.SaveChangesAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await Context.DisposeAsync();
     }
 }

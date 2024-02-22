@@ -1,6 +1,8 @@
 using System.Text;
 using Backend.Graphql.Mutations;
 using Backend.Graphql.Query;
+using Domain.Graphql.Types;
+using Domain.Mapper;
 using Domain.Repositories.Implementations;
 using Domain.Repositories.Interfaces;
 using Domain.Services.Implementations;
@@ -13,24 +15,29 @@ using Model.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContextFactory<YDbContext>(
+builder.Services.AddPooledDbContextFactory<YDbContext>(
     options => options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection") 
     )
 );
 
-builder.Services.AddScoped<IRegexService, RegexService>();
-
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserFollowsRepository, UserFollowsRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUserFollowsRepository, UserFollowsRepository>();
+/*
 builder.Services.AddScoped<IYeetRepository, YeetRepository>();
 builder.Services.AddScoped<IYommentRepository, YommentRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+*/
 
+builder.Services.AddTransient<IUserService, UserService>();
+
+/*
 builder.Services.AddScoped<IYeetService, YeetService>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IYommentService, YommentService>();
+*/
+
+builder.Services.AddTransient<FromMapper<Model.Entities.User, User>, MapUser>();
 
 var jwtOptionsSection = builder.Configuration.GetRequiredSection("Jwt");
 builder.Services.Configure<JwtOptions>(jwtOptionsSection);
@@ -57,24 +64,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-/*
-builder.Services.AddAuthorization(options =>
-{
-   options.AddPolicy("AddFollowPolicy", policy =>
-        policy.Requirements.Add(new IsUserRequirement("slaveId"))); 
-});
-*/
-
-//builder.Services.AddTransient<IAuthorizationHandler, IsUserHandler>();
-
 builder.Services.AddControllers();
 
 builder.Services
     .AddGraphQLServer()
-    .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = builder.Environment.IsDevelopment())
     .AddAuthorization()
-    .AddMutationType<Mutation>()
+    .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = builder.Environment.IsDevelopment())
     .AddMutationConventions(applyToAllMutations: true)
+    .RegisterService<IUserService>()
+    .AddMutationType<Mutation>()
     .AddQueryType<Query>();
 
 var app = builder.Build();
@@ -92,7 +90,7 @@ app.UseCors(x => x
 );
 
 var scope = app.Services.CreateScope();  
-using var dbContext = scope.ServiceProvider.GetRequiredService<YDbContext>();
+using var dbContext = scope.ServiceProvider.GetRequiredService<IDbContextFactory<YDbContext>>().CreateDbContext();
 dbContext.Database.Migrate();
 
 app.Run();

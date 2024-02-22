@@ -13,76 +13,22 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly IUserFollowsRepository _userFollowsRepository;
     private readonly IJwtService _jwtService;
-    private readonly IRegexService _regexService;
 
-    public UserService(IUserRepository userRepository, IUserFollowsRepository userFollowsRepository, IJwtService jwtService,
-        IRegexService regexService)
+    public UserService(IUserRepository userRepository, IUserFollowsRepository userFollowsRepository, IJwtService jwtService)
     {
         _userRepository = userRepository;
         _userFollowsRepository = userFollowsRepository;
         _jwtService = jwtService;
-        _regexService = regexService;
     }
 
     public async Task<UsersResult> Users(UsersInput input)
     {
-        var users = await _userRepository.ReadAll();
-        if (input.Filter is not null)
-        {
-            users = users.Where(u =>
-                _regexService.Matches(input.Filter, u.Username) ||
-                _regexService.Matches(input.Filter, u.FirstName) ||
-                _regexService.Matches(input.Filter, u.LastName))
-            .ToList();
-        }
-        
-        users.Sort(delegate(Graphql.Types.User x, Graphql.Types.User y)
-        {
-            switch (input.Sorting)
-            {
-                case SortUsers.USERNAME:
-                    if (x.Username == null && y.Username == null) return 0;
-                    if (x.Username == null) return -1;
-                    if (y.Username == null) return 1;
-                    return x.Username.CompareTo(y.Username);
-
-                case SortUsers.FIRST_NAME:
-                    if (x.FirstName == null && y.FirstName == null) return 0;
-                    if (x.FirstName == null) return -1;
-                    if (y.FirstName == null) return 1;
-                    return x.FirstName.CompareTo(y.FirstName);
-
-                case SortUsers.LAST_NAME:
-                    if (x.LastName == null && y.LastName == null) return 0;
-                    if (x.LastName == null) return -1;
-                    if (y.LastName == null) return 1;
-                    return x.LastName.CompareTo(y.LastName);
-
-                case SortUsers.FOLLOWER:
-                    if (x.FollowerCount == 0 && y.FollowerCount == 0) return 0;
-                    if (x.FollowerCount == 0) return -1;
-                    if (y.FollowerCount == 0) return 1;
-                    return x.FollowerCount.CompareTo(y.FollowerCount);
-
-                case SortUsers.ID:
-                default:
-                    if (x.Id == 0 && y.Id == 0) return 0;
-                    if (x.Id == 0) return -1;
-                    if (y.Id == 0) return 1;
-                    return x.Id.CompareTo(y.Id);
-            }
-        });
-        if (input.Direction == SortDirection.DSC) users.Reverse();
-        var count = users.Count;
-        users = users.Skip(input.Offset).Take(input.Limit).ToList();
-        return new UsersResult(users, count);
+        return await _userRepository.ReadUsers(input);
     }
 
     public async Task<UserResult> User(UserInput input)
     {
-        var user = await _userRepository.Read(input.UserId);
-        if (user == null) throw new UserNotFoundException(input.UserId);
-        return new UserResult(user);
+        return await _userRepository.ReadUser(input);
     }
 
     public async Task<RegistrationResult> Registration(RegistrationInput input)
@@ -103,7 +49,7 @@ public class UserService : IUserService
         await _userRepository.CreateAsync(user);
         var tokenString = _jwtService.GenerateToken(user);
         
-        var graphqlUser = await _userRepository.Read(user);
+        var graphqlUser = await _userRepository.ReadGraphqlUser(user.Id);
         if (graphqlUser is null)
             throw new Exception("oh no no no!");
         
@@ -112,7 +58,7 @@ public class UserService : IUserService
 
     public async Task<LoginResult> Login(LoginInput input)
     {
-        var user = await _userRepository.ReadForAuth(input.Username);
+        var user = await _userRepository.Read(input.Username);
         
         if (user == null)
             throw new UsernameNotFoundException(input.Username);
@@ -122,7 +68,7 @@ public class UserService : IUserService
 
         var tokenString = _jwtService.GenerateToken(user);
             
-        var graphqlUser = await _userRepository.Read(user);
+        var graphqlUser = await _userRepository.ReadGraphqlUser(user.Id);
         if (graphqlUser is null)
             throw new Exception("oh no no no!");
         
@@ -148,7 +94,7 @@ public class UserService : IUserService
         
         await _userFollowsRepository.CreateAsync(userFollows);
 
-        return new AddFollowResult(follower.FollowingCount + 1, follower.FollowerCount);
+        return new AddFollowResult(follower.Following.Count + 1, follower.Follower.Count);
     }
 
     public async Task<RemoveFollowResult> RemoveFollow(RemoveFollowInput input)
@@ -164,7 +110,7 @@ public class UserService : IUserService
         
         await _userFollowsRepository.DeleteAsync(f => f.FollowingId == following.Id && f.FollowerId == follower.Id);
 
-        return new RemoveFollowResult(follower.FollowingCount - 1, follower.FollowerCount);
+        return new RemoveFollowResult(follower.Following.Count - 1, follower.Follower.Count);
     }
     
     public async Task<string> HashPassword(string password) {

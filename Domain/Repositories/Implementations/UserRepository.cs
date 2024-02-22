@@ -1,4 +1,9 @@
+using System.Text.RegularExpressions;
 using Domain.DTOs;
+using Domain.Graphql.Types.Exceptions;
+using Domain.Graphql.Types.Inputs;
+using Domain.Graphql.Types.Results;
+using Domain.Mapper;
 using Domain.Repositories.Interfaces;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +14,12 @@ namespace Domain.Repositories.Implementations;
 
 public class UserRepository : ARepository<User>, IUserRepository
 {
-    private readonly IUserFollowsRepository _userFollowsRepository;
+    private readonly FromMapper<User, Graphql.Types.User> mapper;
 
-    public UserRepository(YDbContext context, IUserFollowsRepository userFollowsRepository) : base(context)
+
+    public UserRepository(IDbContextFactory<YDbContext> dbContextFactory, FromMapper<User, Graphql.Types.User> mapper) : base(dbContextFactory)
     {
-        _userFollowsRepository = userFollowsRepository;
+        this.mapper = mapper;
     }
 
     public async Task<bool> IsUsernameAvailable(string username)
@@ -21,51 +27,96 @@ public class UserRepository : ARepository<User>, IUserRepository
         return await Table.AllAsync(u => u.Username != username);
     }
 
-    public async Task<Graphql.Types.User?> Read(int id)
+    public async Task<User?> Read(int id)
     {
-        var user = await Table.FirstOrDefaultAsync(u => u.Id == id);
-        if (user == null) return null;
-
-        return await Read(user);
+        return await this.Table
+            .Include(u => u.Following).ThenInclude(f => f.Following)
+            .Include(u => u.Follower).ThenInclude(f => f.Follower)
+            .FirstOrDefaultAsync(u => u.Id == id);
     }
 
-    public async Task<Graphql.Types.User?> Read(string username)
+    public async Task<User?> Read(string username)
     {
-        var user = await Table.FirstOrDefaultAsync(u => u.Username == username);
-        if (user == null) return null;
-        
-        return await Read(user);
+        return await this.Table
+            .Include(u => u.Following).ThenInclude(f => f.Following)
+            .Include(u => u.Follower).ThenInclude(f => f.Follower)
+            .FirstOrDefaultAsync(u => u.Username == username);
     }
 
-    public async Task<List<Graphql.Types.User>> ReadAll()
+    public async Task<Graphql.Types.User?> ReadGraphqlUser(int id)
     {
-        var users = Table.Select(u => Read(u)).ToList();
-        return (await Task.WhenAll(users)).ToList();
+        var user = await Read(id);
+        if (user is null) {  return null; }
+        return mapper.mapFrom(user);
     }
 
-    public async Task<User> ReadForAuth(string username)
+    public async Task<Graphql.Types.User?> ReadGraphqlUser(string username)
     {
-        var user = await Table.FirstOrDefaultAsync(u => u.Username == username);
-        if (user == null) return null;
-        return user;
+        var user = await Read(username);
+        if (user is null) {  return null; }
+        return mapper.mapFrom(user);
     }
 
-    public async Task<User> ReadForAuth(int id)
+    public async Task<UserResult> ReadUser(UserInput input)
     {
-        var user = await Table.FirstOrDefaultAsync(u => u.Id == id);
-        if (user == null) return null;
-        return user;
+        var user = await ReadGraphqlUser(input.UserId);
+        if (user is null)
+            throw new UserNotFoundException(input.UserId);
+        return new UserResult(user);
     }
 
-    public async Task<Graphql.Types.User?> Read(User user)
+    public async Task<UsersResult> ReadUsers(UsersInput input)
     {
-        var followers = (await _userFollowsRepository.GetFollowers(user.Id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
-        var following = (await _userFollowsRepository.GetFollowing(user.Id)).Select(f => f.Adapt<Graphql.Types.UserInfo>()).ToList();
-        return new Graphql.Types.User
+        IQueryable<User> usersQuery = Table
+            .Include(u => u.Following).ThenInclude(f => f.Following)
+            .Include(u => u.Follower).ThenInclude(f => f.Follower);
+
+        if (input.Filter is not null)
+            usersQuery = usersQuery.Where(u => u.Username.Contains(input.Filter));
+
+        switch (input.Direction)
         {
-            Id = user.Id, Username = user.Username, FirstName = user.FirstName, LastName = user.LastName,
-            FollowerCount = followers.Count(), FollowingCount = following.Count(), Follower = followers,
-            Following = following
-        };
+            case SortDirection.ASC:
+                switch (input.Sorting)
+                {
+                    case SortUsers.USERNAME:
+                        usersQuery = usersQuery.OrderBy(u => u.Username);
+                        break;
+                    case SortUsers.FIRST_NAME:
+                        usersQuery = usersQuery.OrderBy(u => u.FirstName);
+                        break;
+                    case SortUsers.LAST_NAME:
+                        usersQuery = usersQuery.OrderBy(u => u.LastName);
+                        break;
+                    default:
+                        usersQuery = usersQuery.OrderBy(u => u.Id);
+                        break;
+                }
+                break;
+            case SortDirection.DSC:
+                switch (input.Sorting)
+                {
+                    case SortUsers.USERNAME:
+                        usersQuery = usersQuery.OrderByDescending(u => u.Username);
+                        break;
+                    case SortUsers.FIRST_NAME:
+                        usersQuery = usersQuery.OrderByDescending(u => u.FirstName);
+                        break;
+                    case SortUsers.LAST_NAME:
+                        usersQuery = usersQuery.OrderByDescending(u => u.LastName);
+                        break;
+                    default:
+                        usersQuery = usersQuery.OrderByDescending(u => u.Id);
+                        break;
+                }
+                break;
+        }
+
+        usersQuery = usersQuery.Skip(input.Offset).Take(input.Limit);
+
+        var count = await usersQuery.CountAsync();
+        var users = await usersQuery.ToListAsync();
+        
+        return new UsersResult(users.Select(u => mapper.mapFrom(u)).ToList(), count);
     }
 }

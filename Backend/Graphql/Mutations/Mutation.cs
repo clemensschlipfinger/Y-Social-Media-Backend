@@ -13,39 +13,31 @@ namespace Backend.Graphql.Mutations;
 
 public class Mutation
 {
-    private readonly IUserService _userService;
-    private readonly IYeetService _yeetService;
-    private readonly IYommentService _yommentService;
-    private readonly ITagService _tagService;
-
-    public Mutation(IUserService userService, IYeetService yeetService, IYommentService yommentService, ITagService tagService)
-    {
-        _userService = userService;
-        _yeetService = yeetService;
-        _yommentService = yommentService;
-        _tagService = tagService;
-    }
 
     [Error(typeof(UsernameAlreadyExistsException))]
     [Error(typeof(PasswordTooShortException))]
-    public async Task<RegistrationResult> Registration(RegistrationInput input) => await _userService.Registration(input);
+    public async Task<RegistrationResult> Registration(RegistrationInput input, IUserService userService) =>
+        await userService.Registration(input);
 
-    
-    [Error(typeof(UsernameNotFoundException))] 
+
+    [Error(typeof(UsernameNotFoundException))]
     [Error(typeof(InvalidPasswordException))]
-    public async Task<LoginResult> Login(LoginInput input) => await _userService.Login(input);
+    public async Task<LoginResult> Login(LoginInput input, IUserService userService) => await userService.Login(input);
 
     [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(FollowingNotFoundException))]
     [Error(typeof(AlreadyFollowingException))]
-    public async Task<AddFollowResult> AddFollow(AddFollowInput input) => await _userService.AddFollow(input);
+    public async Task<AddFollowResult> AddFollow(AddFollowInput input, IUserService userService) =>
+        await userService.AddFollow(input);
 
     [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(FollowingNotFoundException))]
-    public async Task<RemoveFollowResult> RemoveFollow(RemoveFollowInput input) => await _userService.RemoveFollow(input);
+    public async Task<RemoveFollowResult> RemoveFollow(RemoveFollowInput input, IUserService userService) =>
+        await userService.RemoveFollow(input);
 
+/*
     [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(TagNotFoundException))]
@@ -69,8 +61,8 @@ public class Mutation
     [Authorize]
     [Error(typeof(TagAlreadyExistsException))]
     public async Task<CreateTagResult> CreateTag(CreateTagInput input) => await _tagService.CreateTag(input);
+    */
 }
-
 
 /*
 
@@ -79,13 +71,13 @@ public class Mutation
     [Authorize]
     public async Task<User> AddFollow(int followingId, int followerId, [Service] IUserFollowsRepository ufuRepo, [Service] IUserRepository userRepo)
     {
-        
+
     }
-    
+
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(InvalidPasswordException))]
     public async Task<TokenResponse> Login(string username, string password, [Service] IJwtService jwtService, [Service] IUserService userService)
-    { 
+    {
         var storedUser = await userService.GetUser(username);
         if (storedUser == null)
             throw new UserNotFoundException(username);
@@ -104,7 +96,7 @@ public class Mutation
         if (!userRepo.IsUsernameAvailable(username).Result)
             throw new UsernameAlreadyExistsException(username);
 
-        if (password.Length < 8) 
+        if (password.Length < 8)
             throw new PasswordTooShortException();
 
         var user = new User {

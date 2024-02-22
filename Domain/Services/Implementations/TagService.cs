@@ -10,6 +10,7 @@ namespace Domain.Services.Implementations;
 
 public class TagService : ITagService
 {
+    /*
     private readonly ITagRepository _tagRepository;
     private readonly IRegexService _regexService;
 
@@ -62,5 +63,20 @@ public class TagService : ITagService
         };
         var result = await _tagRepository.CreateAsync(tag);
         return new CreateTagResult(result.Adapt<Graphql.Types.Tag>(), await _tagRepository.ReadTags());
+    }
+    */
+    public Task<TagsResult> Tags(TagsInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<TagResult> Tag(TagInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<CreateTagResult> CreateTag(CreateTagInput input)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -10,9 +10,6 @@ namespace Domain.Repositories.Implementations;
 
 public class UserFollowsRepository : ARepository<UserFollowsUser>, IUserFollowsRepository
 {
-    public UserFollowsRepository(YDbContext context) : base(context)
-    {
-    }
 
     public async Task<List<User>> GetFollowers(int userId)
         => await Table.Where((ufu) => ufu.FollowingId == userId)
@@ -26,4 +23,8 @@ public class UserFollowsRepository : ARepository<UserFollowsUser>, IUserFollowsR
 
     public async Task<bool> IsFollowing(int followingId, int followerId)
         => await Table.FirstOrDefaultAsync(u => u.FollowingId == followingId && u.FollowerId == followerId) != null;
+
+    public UserFollowsRepository(IDbContextFactory<YDbContext> dbContextFactory) : base(dbContextFactory)
+    {
+    }
 }

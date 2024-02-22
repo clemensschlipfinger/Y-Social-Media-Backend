@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <PackageReference Include="BCrypt-Official" Version="0.1.109" />
+      <PackageReference Include="HotChocolate.Data" Version="13.7.0" />
       <PackageReference Include="Mapster" Version="7.4.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.14" />
     </ItemGroup>

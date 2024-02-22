@@ -21,4 +21,7 @@ public class User
    
    [Column("password_hash"),Required]
    public string PasswordHash { get; set; }
+   
+   public List<UserFollowsUser> Following { get; set; }
+   public List<UserFollowsUser> Follower { get; set; }
 }
