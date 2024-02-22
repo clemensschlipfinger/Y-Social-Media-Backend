@@ -2,4 +2,4 @@ using Model.Entities;
 
 namespace Domain.Graphql.Types.Results;
 
-public record DeleteYommentResult(Yeet Yeet, List<Yomment> Yomments);
+public record DeleteYommentResult(int Id);

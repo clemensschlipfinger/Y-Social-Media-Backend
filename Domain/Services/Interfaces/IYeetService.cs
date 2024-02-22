@@ -10,4 +10,5 @@ public interface IYeetService
     Task<FeedResult> Feed(FeedInput input);
     Task<CreateYeetResult> CreateYeet(CreateYeetInput input);
     Task<DeleteYeetResult> DeleteYeet(DeleteYeetInput input);
+    Task<AddLikeToYeetResult> AddLikeToYeet(AddLikeToYeetInput input);
 }

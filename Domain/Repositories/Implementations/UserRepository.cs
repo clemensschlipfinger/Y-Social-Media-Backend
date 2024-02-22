@@ -14,13 +14,17 @@ namespace Domain.Repositories.Implementations;
 
 public class UserRepository : ARepository<User>, IUserRepository
 {
-    private readonly FromMapper<User, Graphql.Types.User> mapper;
+    private readonly FromMapper<User, Graphql.Types.User> _mapper;
 
 
     public UserRepository(IDbContextFactory<YDbContext> dbContextFactory, FromMapper<User, Graphql.Types.User> mapper) : base(dbContextFactory)
     {
-        this.mapper = mapper;
+        this._mapper = mapper;
     }
+    private IQueryable<User> PreparedStatement() => Table
+        .Include(u => u.Follower).ThenInclude(u => u.Follower)
+        .Include(u => u.Following).ThenInclude(u => u.Following)
+                    .AsQueryable(); 
 
     public async Task<bool> IsUsernameAvailable(string username)
     {
@@ -29,32 +33,26 @@ public class UserRepository : ARepository<User>, IUserRepository
 
     public async Task<User?> Read(int id)
     {
-        return await this.Table
-            .Include(u => u.Following).ThenInclude(f => f.Following)
-            .Include(u => u.Follower).ThenInclude(f => f.Follower)
-            .FirstOrDefaultAsync(u => u.Id == id);
+        return await this.PreparedStatement().FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task<User?> Read(string username)
     {
-        return await this.Table
-            .Include(u => u.Following).ThenInclude(f => f.Following)
-            .Include(u => u.Follower).ThenInclude(f => f.Follower)
-            .FirstOrDefaultAsync(u => u.Username == username);
+        return await this.PreparedStatement().FirstOrDefaultAsync(u => u.Username == username);
     }
 
     public async Task<Graphql.Types.User?> ReadGraphqlUser(int id)
     {
         var user = await Read(id);
         if (user is null) {  return null; }
-        return mapper.mapFrom(user);
+        return _mapper.mapFrom(user);
     }
 
     public async Task<Graphql.Types.User?> ReadGraphqlUser(string username)
     {
         var user = await Read(username);
         if (user is null) {  return null; }
-        return mapper.mapFrom(user);
+        return _mapper.mapFrom(user);
     }
 
     public async Task<UserResult> ReadUser(UserInput input)
@@ -65,56 +63,42 @@ public class UserRepository : ARepository<User>, IUserRepository
 
     public async Task<UsersResult> ReadUsers(UsersInput input)
     {
-        IQueryable<User> usersQuery = Table
-            .Include(u => u.Following).ThenInclude(f => f.Following)
-            .Include(u => u.Follower).ThenInclude(f => f.Follower);
+        IQueryable<User> usersQuery = PreparedStatement();
 
-        if (input.Filter is not null)
+        if (input.Filter is not null && input.Filter.Length > 0)
             usersQuery = usersQuery.Where(u => u.Username.Contains(input.Filter));
 
-        switch (input.Direction)
+        usersQuery = input.Direction switch
         {
-            case SortDirection.ASC:
-                switch (input.Sorting)
-                {
-                    case SortUsers.USERNAME:
-                        usersQuery = usersQuery.OrderBy(u => u.Username);
-                        break;
-                    case SortUsers.FIRST_NAME:
-                        usersQuery = usersQuery.OrderBy(u => u.FirstName);
-                        break;
-                    case SortUsers.LAST_NAME:
-                        usersQuery = usersQuery.OrderBy(u => u.LastName);
-                        break;
-                    default:
-                        usersQuery = usersQuery.OrderBy(u => u.Id);
-                        break;
-                }
-                break;
-            case SortDirection.DSC:
-                switch (input.Sorting)
-                {
-                    case SortUsers.USERNAME:
-                        usersQuery = usersQuery.OrderByDescending(u => u.Username);
-                        break;
-                    case SortUsers.FIRST_NAME:
-                        usersQuery = usersQuery.OrderByDescending(u => u.FirstName);
-                        break;
-                    case SortUsers.LAST_NAME:
-                        usersQuery = usersQuery.OrderByDescending(u => u.LastName);
-                        break;
-                    default:
-                        usersQuery = usersQuery.OrderByDescending(u => u.Id);
-                        break;
-                }
-                break;
-        }
+            SortDirection.ASC => input.Sorting switch
+            {
+                SortUsers.ID => usersQuery.OrderBy(u => u.Id),
+                SortUsers.USERNAME => usersQuery.OrderBy(u => u.Username).ThenBy(u => u.Id),
+                SortUsers.FIRST_NAME => usersQuery.OrderBy(u => u.FirstName).ThenBy(u => u.Id),
+                SortUsers.LAST_NAME => usersQuery.OrderBy(u => u.LastName).ThenBy(u => u.Id),
+                SortUsers.FOLLOWER => usersQuery.OrderBy(u => u.Follower).ThenBy(u => u.Id),
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            SortDirection.DSC => input.Sorting switch
+            {
+                SortUsers.ID => usersQuery.OrderByDescending(u => u.Id),
+                SortUsers.USERNAME => usersQuery.OrderByDescending(u => u.Username).ThenByDescending(u => u.Id),
+                SortUsers.FIRST_NAME => usersQuery.OrderByDescending(u => u.FirstName).ThenByDescending(u => u.Id),
+                SortUsers.LAST_NAME => usersQuery.OrderByDescending(u => u.LastName).ThenByDescending(u => u.Id),
+                SortUsers.FOLLOWER => usersQuery.OrderByDescending(u => u.Follower).ThenByDescending(u => u.Id),
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            _ => usersQuery
+        };
 
         usersQuery = usersQuery.Skip(input.Offset).Take(input.Limit);
 
         var count = await usersQuery.CountAsync();
         var users = await usersQuery.ToListAsync();
         
-        return new UsersResult(users.Select(u => mapper.mapFrom(u)).ToList(), count);
+        return new UsersResult(users.Select(u => _mapper.mapFrom(u)).ToList(), count);
     }
+
+    public Task<bool> Exists(int userId) => Table.AnyAsync(u => u.Id == userId);
+
 }

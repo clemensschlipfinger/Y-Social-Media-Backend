@@ -9,4 +9,5 @@ public interface IYommentService
     Task<YommentResult> Yomment(YommentInput inpot);
     Task<CreateYommentResult> CreateYomment(CreateYommentInput input);
     Task<DeleteYommentResult> DeleteYomment(DeleteYommentInput input);
+    Task<AddLikeToYommentResult> AddLikeToYomment(AddLikeToYommentInput input);
 }

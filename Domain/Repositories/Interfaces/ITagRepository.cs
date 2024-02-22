@@ -10,4 +10,7 @@ public interface ITagRepository : IRepository<Tag>
 
     Task<TagsResult> ReadTags(TagsInput input);
     Task<List<Graphql.Types.Tag>> ReadAllGraphqlTag();
+
+    Task<bool> ExistByIds(List<int> ids);
+    Task<bool> Exists(int tagId);
 }

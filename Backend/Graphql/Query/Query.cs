@@ -19,22 +19,19 @@ public class Query {
     public async Task<UserResult> User(UserInput input, IUserService userService ) => await userService.User(input);
     public async Task<YeetsResult> Yeets(YeetsInput input, IYeetService yeetService) => await yeetService.Yeets(input);
     
-    [Error(typeof(YeetNotFoundException))]
     public async Task<YeetResult> Yeet(YeetInput input, IYeetService yeetService) => await yeetService.Yeet(input);
 
+    [Authorize]
     public async Task<FeedResult> Feed([GlobalState("UserId")] int userId, FeedInput input, IYeetService yeetService)
     {
         input.UserId = userId; 
         return await yeetService.Feed(input);
     }
     
-    /*
-    public async Task<YommentsResult> Yomments(YommentsInput input) => await _yommentService.Yomments(input);
+    public async Task<YommentsResult> Yomments(YommentsInput input, IYommentService yommentService) => await yommentService.Yomments(input);
     
-    [Error(typeof(YommentNotFoundException))]
-    public async Task<YommentResult> Yomment(YommentInput input) => await _yommentService.Yomment(input);
+    public async Task<YommentResult> Yomment(YommentInput input, IYommentService yommentService) => await yommentService.Yomment(input);
     
-    */
     public async Task<TagsResult> Tags(TagsInput input, ITagService tagService) => await tagService.Tags(input);
     
     public async Task<TagResult> Tag(TagInput input, ITagService tagService) => await tagService.Tag(input);

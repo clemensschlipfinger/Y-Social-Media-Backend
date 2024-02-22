@@ -10,4 +10,7 @@ public interface IYeetRepository  : IRepository<Yeet>
     Task<YeetsResult> ReadYeets(YeetsInput input);
     Task<YeetResult> ReadYeet(YeetInput input);
     Task<FeedResult> ReadFeed(FeedInput input);
+    Task<Graphql.Types.Yeet?> ReadGraphqlYeet(int id);
+    
+    Task<bool> Exists(int yeetId); 
 }

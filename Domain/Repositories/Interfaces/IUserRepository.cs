@@ -17,4 +17,5 @@ public interface IUserRepository : IRepository<User>
 
     Task<UserResult> ReadUser(UserInput input);
     Task<UsersResult> ReadUsers(UsersInput input);
+    Task<bool> Exists(int userId);
 }

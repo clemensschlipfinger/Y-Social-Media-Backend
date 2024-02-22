@@ -142,8 +142,7 @@ type Yomment {
     likes: Int!
     createdAt: DateTime!
     yeetId: Int!
-    userId: Int!
-    user: User!
+    user: UserInfo!
 }
 
 input YommentInput {

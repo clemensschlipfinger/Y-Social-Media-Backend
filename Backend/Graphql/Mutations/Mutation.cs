@@ -45,29 +45,44 @@ public class Mutation
         return await userService.RemoveFollow(input);
     }
 
-/*
     [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(TagNotFoundException))]
-    public async Task<CreateYeetResult> CreateYeet(CreateYeetInput input) => await _yeetService.CreateYeet(input);
+    public async Task<CreateYeetResult> CreateYeet([GlobalState("UserId")] int userId, CreateYeetInput input,
+        IYeetService yeetService)
+    {
+        input.UserId = userId;
+        return await yeetService.CreateYeet(input);  
+    } 
 
     [Authorize]
     [Error(typeof(YeetNotFoundException))]
-    public async Task<DeleteYeetResult> DeleteYeet(DeleteYeetInput input) => await _yeetService.DeleteYeet(input);
+    public async Task<DeleteYeetResult> DeleteYeet(DeleteYeetInput input, IYeetService yeetService) => await yeetService.DeleteYeet(input);
 
     [Authorize]
     [Error(typeof(YeetNotFoundException))]
     [Error(typeof(UserNotFoundException))]
-    public async Task<CreateYommentResult> CreateYomment(CreateYommentInput input) =>
-        await _yommentService.CreateYomment(input);
+    public async Task<CreateYommentResult> CreateYomment([GlobalState("UserId")] int userId, CreateYommentInput input, IYommentService yommentService)
+    {
+        input.UserId = userId;
+        return await yommentService.CreateYomment(input);
+    }
+    [Authorize]
+    [Error(typeof(YeetNotFoundException))]
+    public async Task<AddLikeToYeetResult> AddLikeToYeet(AddLikeToYeetInput input, IYeetService yeetService) =>
+        await yeetService.AddLikeToYeet(input);
 
     [Authorize]
     [Error(typeof(YommentNotFoundException))]
-    public async Task<DeleteYommentResult> DeleteYomment(DeleteYommentInput input) =>
-        await _yommentService.DeleteYomment(input);
-        */
+    public async Task<DeleteYommentResult> DeleteYomment(DeleteYommentInput input,IYommentService yommentService) =>
+        await yommentService.DeleteYomment(input);
 
     [Authorize]
     [Error(typeof(TagAlreadyExistsException))]
     public async Task<CreateTagResult> CreateTag(CreateTagInput input, ITagService tagService) => await tagService.CreateTag(input);
+
+    [Authorize]
+    [Error(typeof(YommentNotFoundException))]
+    public async Task<AddLikeToYommentResult> AddLikeToYomment(AddLikeToYommentInput input, IYommentService yommentService) =>
+        await yommentService.AddLikeToYomment(input);
 }

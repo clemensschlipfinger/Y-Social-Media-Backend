@@ -8,7 +8,6 @@ public record Yeet
     public List<Tag> Tags { get; set; }
     public int Likes { get; set; }
     public DateTime CreatedAt { get; set; }
-    public int UserId { get; set; }
-    public User User { get; set; }
+    public UserInfo User { get; set; }
     public List<Yomment> Yomments { get; set; }
 }

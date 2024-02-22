@@ -11,6 +11,7 @@ using Domain.Services.Interfaces;
 using Domain.Services.ValueTypes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using Model.Configuration;
 
@@ -18,7 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPooledDbContextFactory<YDbContext>(
     options => options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection") 
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+    optionsPg => optionsPg.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
     )
 );
 
@@ -26,20 +28,16 @@ builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserFollowsRepository, UserFollowsRepository>();
 builder.Services.AddTransient<ITagRepository, TagRepository>();
 builder.Services.AddTransient<IYeetRepository, YeetRepository>();
-/*
-builder.Services.AddScoped<IYommentRepository, YommentRepository>();
-*/
+builder.Services.AddTransient<IYommentRepository, YommentRepository>();
 
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ITagService, TagService>();
-builder.Services.AddTransient<IYeetService, YeetService>();
-
-/*
-builder.Services.AddScoped<IYommentService, YommentService>();
-*/
+builder.Services.AddTransient<IYeetService, YeetService>(); 
+builder.Services.AddTransient<IYommentService, YommentService>();
 
 builder.Services.AddTransient<FromMapper<Model.Entities.User, User>, MapUser>();
 builder.Services.AddTransient<FromMapper<Model.Entities.Yeet, Yeet>, MapYeet>();
+builder.Services.AddTransient<FromMapper<Model.Entities.Yomment, Yomment>, MapYomment>();
 
 var jwtOptionsSection = builder.Configuration.GetRequiredSection("Jwt");
 builder.Services.Configure<JwtOptions>(jwtOptionsSection);
@@ -62,7 +60,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidateIssuerSigningKey = true
+        ValidateIssuerSigningKey = true,
     };
 });
 
@@ -76,6 +74,7 @@ builder.Services
     .RegisterService<IUserService>()
     .RegisterService<ITagService>()
     .RegisterService<IYeetService>()
+    .RegisterService<IYommentService>()
     .AddHttpRequestInterceptor<GetUserIdInterceptor>()
     .AddMutationType<Mutation>()
     .AddQueryType<Query>();
