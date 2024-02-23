@@ -76,7 +76,7 @@ public class UserRepository : ARepository<User>, IUserRepository
                 SortUsers.USERNAME => usersQuery.OrderBy(u => u.Username).ThenBy(u => u.Id),
                 SortUsers.FIRST_NAME => usersQuery.OrderBy(u => u.FirstName).ThenBy(u => u.Id),
                 SortUsers.LAST_NAME => usersQuery.OrderBy(u => u.LastName).ThenBy(u => u.Id),
-                SortUsers.FOLLOWER => usersQuery.OrderBy(u => u.Follower).ThenBy(u => u.Id),
+                SortUsers.FOLLOWER => usersQuery.OrderBy(u => u.Follower.Count).ThenBy(u => u.Id),
                 _ => throw new ArgumentOutOfRangeException()
             },
             SortDirection.DSC => input.Sorting switch
@@ -85,7 +85,7 @@ public class UserRepository : ARepository<User>, IUserRepository
                 SortUsers.USERNAME => usersQuery.OrderByDescending(u => u.Username).ThenByDescending(u => u.Id),
                 SortUsers.FIRST_NAME => usersQuery.OrderByDescending(u => u.FirstName).ThenByDescending(u => u.Id),
                 SortUsers.LAST_NAME => usersQuery.OrderByDescending(u => u.LastName).ThenByDescending(u => u.Id),
-                SortUsers.FOLLOWER => usersQuery.OrderByDescending(u => u.Follower).ThenByDescending(u => u.Id),
+                SortUsers.FOLLOWER => usersQuery.OrderByDescending(u => u.Follower.Count).ThenByDescending(u => u.Id),
                 _ => throw new ArgumentOutOfRangeException()
             },
             _ => usersQuery
