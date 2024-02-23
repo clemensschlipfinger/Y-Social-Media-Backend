@@ -36,8 +36,14 @@ public class UserService : IUserService
         if (!await _userRepository.IsUsernameAvailable(input.Username))
             throw new UsernameAlreadyExistsException(input.Username);
 
-        if (input.Password.Length < 8 || !input.Password.Any(char.IsUpper) || !input.Password.Any(char.IsLower) || !input.Password.Any(char.IsDigit))
+        if (input.Password.Length < 8)
             throw new PasswordTooShortException();
+        else if (!input.Password.Any(char.IsUpper))
+            throw new PasswordHasNoUpperCaseLettersException();
+        else if (!input.Password.Any(char.IsLower))
+            throw new PasswordHasNoLowerCaseLettersException();
+        else if (!input.Password.Any(char.IsDigit))
+            throw new PasswordHasNoDigitsException(); 
         
         var user = new User {
             Username = input.Username,

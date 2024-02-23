@@ -2,7 +2,7 @@
 
 public class PasswordTooShortException : Exception
 {
-    public PasswordTooShortException() : base("Password is too simple.")
+    public PasswordTooShortException() : base("Password is too short.")
     {
     }
 }

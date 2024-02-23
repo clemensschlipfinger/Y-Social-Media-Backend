@@ -16,6 +16,9 @@ public class Mutation
 
     [Error(typeof(UsernameAlreadyExistsException))]
     [Error(typeof(PasswordTooShortException))]
+    [Error(typeof(PasswordHasNoUpperCaseLettersException))]
+    [Error(typeof(PasswordHasNoLowerCaseLettersException))]
+    [Error(typeof(PasswordHasNoDigitsException))]
     public async Task<RegistrationResult> Registration(RegistrationInput input, IUserService userService) =>
         await userService.Registration(input);
 
