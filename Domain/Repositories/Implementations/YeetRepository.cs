@@ -23,7 +23,11 @@ public class YeetRepository
         _userRepository = userRepository;
     }
 
-    private IQueryable<Yeet> PreparedStatement() => Table .Include(y => y.User)
+    private IQueryable<Yeet> PreparedStatement() => Table
+                    .Include(y => y.User)
+                        .ThenInclude(u => u.Following).ThenInclude(u => u.Following) 
+                    .Include(y => y.User)
+                        .ThenInclude(u => u.Follower).ThenInclude(u => u.Follower)
                     .Include(y => y.Tags).ThenInclude(y => y.Tag)
                     .Include(y => y.Yomments).ThenInclude(y => y.User)
                     .AsQueryable(); 

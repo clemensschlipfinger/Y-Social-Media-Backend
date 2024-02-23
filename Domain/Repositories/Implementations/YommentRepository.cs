@@ -17,7 +17,12 @@ public class YommentRepository : ARepository<Yomment>, IYommentRepository
         _yommentMapper = yommentMapper;
     }
     
-    private IQueryable<Yomment> PreparedStatement() => Table .Include(y => y.User) .AsQueryable(); 
+    private IQueryable<Yomment> PreparedStatement() => Table
+                    .Include(y => y.User)
+                        .ThenInclude(u => u.Following).ThenInclude(u => u.Following) 
+                    .Include(y => y.User)
+                        .ThenInclude(u => u.Follower).ThenInclude(u => u.Follower)
+        .AsQueryable(); 
 
     public async Task<YommentsResult> ReadYomments(YommentsInput input) 
     {

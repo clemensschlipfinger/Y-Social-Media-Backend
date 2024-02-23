@@ -66,7 +66,7 @@ public class UserRepository : ARepository<User>, IUserRepository
         IQueryable<User> usersQuery = PreparedStatement();
 
         if (input.Filter is not null && input.Filter.Length > 0)
-            usersQuery = usersQuery.Where(u => u.Username.Contains(input.Filter));
+            usersQuery = usersQuery.Where(u => u.Username.Contains(input.Filter) || u.FirstName.Contains(input.Filter)|| u.LastName.Contains(input.Filter));
 
         usersQuery = input.Direction switch
         {

@@ -7,5 +7,5 @@ public record Yomment
     public int Likes { get; set; }
     public DateTime CreatedAt { get; set; }
     public int YeetId { get; set; }
-    public UserInfo User { get; set; }
+    public User User { get; set; }
 }
