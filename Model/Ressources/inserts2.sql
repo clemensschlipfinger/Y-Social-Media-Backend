@@ -73,7 +73,11 @@ values (1, 'Exciting Journey', 'Embarking on a new adventure. #mountains #nature
        (21, 'Game Development Insights', 'Sharing insights into game development. #gamedev #programming', 0, current_timestamp, 5),
        (22, 'Sculpting Wonders', 'Creating sculptures and exploring new art forms. #art #creativity', 0, current_timestamp, 6),
        (23, 'Astrophysics Unraveled', 'Diving deep into the mysteries of astrophysics. #science #knowledge', 0, current_timestamp, 4),
-       (24, 'Street Style Vibes', 'Capturing street style trends in the city. #fashion #style', 0, current_timestamp, 5);
+       (24, 'Street Style Vibes', 'Capturing street style trends in the city. #fashion #style', 0, current_timestamp, 5),
+       (25, 'Mountain Meditation', 'Finding inner peace amidst majestic mountains. #mountains #meditation', 0, current_timestamp, 2),
+       (26, 'AI and Creativity', 'Exploring the intersection of AI and creative expression. #AI #creativity', 0, current_timestamp, 2),
+       (27, 'Bookworm Adventures', 'Embarking on a literary journey through captivating books. #literature #reading', 0, current_timestamp, 2),
+       (28, 'Coffee Shop Chronicles', 'Sipping on coffee and observing the world in a cozy coffee shop. #coffee #relaxation', 0, current_timestamp, 2);
 
 insert into yeet_has_tags (yeet_id, tag_id)
 values (1, 1),
@@ -112,7 +116,15 @@ values (1, 1),
        (22, 13),
        (22, 15),
        (23, 14),
-       (24, 15);
+       (24, 15),
+       (25, 2),
+       (25, 5),
+       (26, 3),
+       (26, 5),
+       (27, 4),
+       (27, 5),
+       (28, 4),
+       (28, 10);
 
 insert into yomments (yomment_id, yeet_id, body, likes, created_at, user_id)
 values (1, 1, 'Love the mountain vibes in this yeet!', 0, current_timestamp, 1),
@@ -139,5 +151,10 @@ values (1, 1, 'Love the mountain vibes in this yeet!', 0, current_timestamp, 1),
        (22, 21, 'Game development is a challenging but rewarding field. Any favorite game you''ve worked on?', 0, current_timestamp, 2),
        (23, 22, 'Sculpting is such a unique form of expression. Do you have a favorite material to work with?', 0, current_timestamp, 3),
        (24, 23, 'Astrophysics is fascinating! Are there any specific celestial phenomena that you find intriguing?', 0, current_timestamp, 1),
-       (25, 24, 'Street style captures the essence of urban culture. Any fashion influencers you follow?', 0, current_timestamp, 2);
+       (25, 24, 'Street style captures the essence of urban culture. Any fashion influencers you follow?', 0, current_timestamp, 2),
+       (26, 25, 'Mountain meditation sounds serene. Any favorite mountain range you recommend?', 0, current_timestamp, 1),
+       (27, 26, 'AI and creativity are a fascinating combination. How do you see AI influencing the arts?', 0, current_timestamp, 3),
+       (28, 27, 'Book recommendations, please! Always looking for the next great read.', 0, current_timestamp, 1),
+       (29, 28, 'Coffee shops are my go-to for inspiration too. Any favorite coffee blend?', 0, current_timestamp, 3),
+       (30, 28, 'The ambiance of a coffee shop is unmatched. Do you have a favorite spot?', 0, current_timestamp, 1);
 
