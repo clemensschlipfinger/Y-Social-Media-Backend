@@ -31,6 +31,11 @@ public class UserService : IUserService
         return await _userRepository.ReadUser(input);
     }
 
+    public Task<UserByUserNameResult> UserName(UserByUserNameInput input)
+    {
+        return _userRepository.ReadUser(input);
+    }
+
     public async Task<RegistrationResult> Registration(RegistrationInput input)
     {
         if (!await _userRepository.IsUsernameAvailable(input.Username))

@@ -61,6 +61,13 @@ public class UserRepository : ARepository<User>, IUserRepository
         return new UserResult(user);
     }
 
+    public async Task<UserByUserNameResult> ReadUser(UserByUserNameInput input)
+    {
+        var user = await this.PreparedStatement().FirstOrDefaultAsync(u => u.Username == input.UserName);
+        if (user is null) {  return new UserByUserNameResult(null); }
+        return new UserByUserNameResult(_mapper.mapFrom(user));
+    }
+
     public async Task<UsersResult> ReadUsers(UsersInput input)
     {
         IQueryable<User> usersQuery = PreparedStatement();

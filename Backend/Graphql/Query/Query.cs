@@ -17,6 +17,7 @@ public class Query {
     public async Task<UsersResult> Users(UsersInput input, IUserService userService) => await userService.Users(input);
     
     public async Task<UserResult> User(UserInput input, IUserService userService ) => await userService.User(input);
+    public async Task<UserByUserNameResult> UserByUserName(UserByUserNameInput input, IUserService userService ) => await userService.UserName(input);
     public async Task<YeetsResult> Yeets(YeetsInput input, IYeetService yeetService) => await yeetService.Yeets(input);
     
     public async Task<YeetResult> Yeet(YeetInput input, IYeetService yeetService) => await yeetService.Yeet(input);

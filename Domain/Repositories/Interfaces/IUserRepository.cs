@@ -16,6 +16,8 @@ public interface IUserRepository : IRepository<User>
     Task<Graphql.Types.User?> ReadGraphqlUser(string username);
 
     Task<UserResult> ReadUser(UserInput input);
+    Task<UserByUserNameResult> ReadUser(UserByUserNameInput input);
     Task<UsersResult> ReadUsers(UsersInput input);
+
     Task<bool> Exists(int userId);
 }

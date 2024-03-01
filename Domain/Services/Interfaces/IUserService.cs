@@ -8,6 +8,7 @@ public interface IUserService
 {
     Task<UsersResult> Users(UsersInput input);
     Task<UserResult> User(UserInput input);
+    Task<UserByUserNameResult> UserName(UserByUserNameInput input);
     Task<RegistrationResult> Registration(RegistrationInput input);
     Task<LoginResult> Login(LoginInput input);
     Task<AddFollowResult> AddFollow(AddFollowInput input);
