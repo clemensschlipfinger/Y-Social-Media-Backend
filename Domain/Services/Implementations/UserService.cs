@@ -105,7 +105,8 @@ public class UserService : IUserService
         
         await _userFollowsRepository.CreateAsync(userFollows);
 
-        return new AddFollowResult(follower.Following.Count + 1, follower.Follower.Count);
+        var updatedFollower = await _userRepository.ReadGraphqlUser(input.UserId);
+        return new AddFollowResult(updatedFollower!);
     }
 
     public async Task<RemoveFollowResult> RemoveFollow(RemoveFollowInput input)
@@ -120,7 +121,9 @@ public class UserService : IUserService
             throw new NeverFollowedException(follower.Username, following.Username);
         
         await _userFollowsRepository.DeleteAsync(f => f.FollowingId == following.Id && f.FollowerId == follower.Id); 
-        return new RemoveFollowResult(follower.Following.Count - 1, follower.Follower.Count);
+        
+        var updatedFollower = await _userRepository.ReadGraphqlUser(input.UserId);
+        return new RemoveFollowResult(updatedFollower!);
     }
     
     public Task<string> HashPassword(string password) {

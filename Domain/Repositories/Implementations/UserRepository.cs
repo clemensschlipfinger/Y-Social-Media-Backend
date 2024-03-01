@@ -24,6 +24,7 @@ public class UserRepository : ARepository<User>, IUserRepository
     private IQueryable<User> PreparedStatement() => Table
         .Include(u => u.Follower).ThenInclude(u => u.Follower)
         .Include(u => u.Following).ThenInclude(u => u.Following)
+        .AsNoTracking()
                     .AsQueryable(); 
 
     public async Task<bool> IsUsernameAvailable(string username)

@@ -1,3 +1,3 @@
 namespace Domain.Graphql.Types.Results;
 
-public record AddFollowResult(int NewFollowingCount, int NewFollowerCount);
+public record AddFollowResult(User User);

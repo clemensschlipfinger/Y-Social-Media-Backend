@@ -41,6 +41,7 @@ public class Mutation
     [Authorize]
     [Error(typeof(UserNotFoundException))]
     [Error(typeof(FollowingNotFoundException))]
+    [Error(typeof(NeverFollowedException))]
     public async Task<RemoveFollowResult> RemoveFollow([GlobalState("UserId")] int userId, RemoveFollowInput input,
         IUserService userService)
     {
