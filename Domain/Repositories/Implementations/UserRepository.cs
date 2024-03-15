@@ -98,10 +98,10 @@ public class UserRepository : ARepository<User>, IUserRepository
             },
             _ => usersQuery
         };
+        var count = await usersQuery.CountAsync();
 
         usersQuery = usersQuery.Skip(input.Offset).Take(input.Limit);
 
-        var count = await usersQuery.CountAsync();
         var users = await usersQuery.ToListAsync();
         
         return new UsersResult(users.Select(u => _mapper.mapFrom(u)).ToList(), count);
