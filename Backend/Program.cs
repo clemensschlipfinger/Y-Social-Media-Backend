@@ -1,4 +1,5 @@
 using System.Text;
+using Backend;
 using Backend.Graphql;
 using Backend.Graphql.Mutations;
 using Backend.Graphql.Query;
@@ -17,9 +18,11 @@ using Model.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var postgresOptions = builder.Configuration.GetRequiredSection("Postgres");
+var postgresConnectionString = $"Host={postgresOptions.GetValue<string>("Server")};Database={postgresOptions.GetValue<string>("Database")};Username={postgresOptions.GetValue<string>("Username")};Password={postgresOptions.GetValue<string>("Password")}";
+
 builder.Services.AddPooledDbContextFactory<YDbContext>(
-    options => options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
+    options => options.UseNpgsql(postgresConnectionString,
     optionsPg => optionsPg.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
     )
 );
