@@ -17,47 +17,52 @@ public class YeetRepository
     private readonly FromMapper<Yeet, Graphql.Types.Yeet> _mapper;
     private readonly IUserRepository _userRepository;
 
-    public YeetRepository(IDbContextFactory<YDbContext> dbContextFactory, FromMapper<Yeet, Graphql.Types.Yeet> mapper, IUserRepository userRepository) : base(dbContextFactory)
+    public YeetRepository(IDbContextFactory<YDbContext> dbContextFactory, FromMapper<Yeet, Graphql.Types.Yeet> mapper,
+        IUserRepository userRepository) : base(dbContextFactory)
     {
         this._mapper = mapper;
         _userRepository = userRepository;
     }
 
     private IQueryable<Yeet> PreparedStatement() => Table
-                    .Include(y => y.User)
-                        .ThenInclude(u => u.Following).ThenInclude(u => u.Following) 
-                    .Include(y => y.User)
-                        .ThenInclude(u => u.Follower).ThenInclude(u => u.Follower)
-                    .Include(y => y.Tags).ThenInclude(y => y.Tag)
-                    .Include(y => y.Yomments).ThenInclude(y => y.User)
-                        .ThenInclude(u => u.Following).ThenInclude(u => u.Following) 
-                    .Include(y => y.Yomments).ThenInclude(y => y.User)
-                        .ThenInclude(u => u.Follower).ThenInclude(u => u.Follower)
-                    .AsQueryable(); 
+        .Include(y => y.User)
+        .ThenInclude(u => u.Following).ThenInclude(u => u.Following)
+        .Include(y => y.User)
+        .ThenInclude(u => u.Follower).ThenInclude(u => u.Follower)
+        .Include(y => y.Tags).ThenInclude(y => y.Tag)
+        .Include(y => y.Yomments).ThenInclude(y => y.User)
+        .ThenInclude(u => u.Following).ThenInclude(u => u.Following)
+        .Include(y => y.Yomments).ThenInclude(y => y.User)
+        .ThenInclude(u => u.Follower).ThenInclude(u => u.Follower)
+        .AsQueryable();
 
     public async Task<YeetsResult> ReadYeets(YeetsInput input)
     {
-        var yeetsQuery = PreparedStatement(); 
+        var yeetsQuery = PreparedStatement();
 
         if (input.Filter is not null && input.Filter.Length > 0)
-            yeetsQuery = yeetsQuery.Where(u => u.Title.Contains(input.Filter));
+            yeetsQuery = yeetsQuery.Where(u =>
+                u.User.Username.ToLower().Contains(input.Filter.ToLower()) ||
+                u.Title.ToLower().Contains(input.Filter.ToLower()) ||
+                u.Body.ToLower().Contains(input.Filter.ToLower()) || u.Tags.Any(yeetTag =>
+                    yeetTag.Tag.Name.ToLower().Contains(input.Filter.ToLower())));
 
         if (input.Tags is not null && input.Tags.Any())
             yeetsQuery = yeetsQuery.Where(u => u.Tags.Any(t => input.Tags.Contains(t.TagId)));
-        
+
         var count = await yeetsQuery.CountAsync();
 
         yeetsQuery = input.Direction switch
         {
             SortDirection.ASC => input.Sorting switch
-                {
-                    SortYeets.ID => yeetsQuery.OrderBy(y => y.Id),
-                    SortYeets.TITLE => yeetsQuery.OrderBy(y => y.Title).ThenBy(y => y.Id),
-                    SortYeets.CREATED_AT => yeetsQuery.OrderBy(y => y.CreatedAt).ThenBy(y => y.Id),
-                    SortYeets.LIKES => yeetsQuery.OrderBy(y => y.Likes).ThenBy(y => y.Id),
-                    SortYeets.TAG => yeetsQuery.OrderBy(y => y.Tags).ThenBy(y => y.Id),
-                    _ => throw new ArgumentOutOfRangeException()
-                },
+            {
+                SortYeets.ID => yeetsQuery.OrderBy(y => y.Id),
+                SortYeets.TITLE => yeetsQuery.OrderBy(y => y.Title).ThenBy(y => y.Id),
+                SortYeets.CREATED_AT => yeetsQuery.OrderBy(y => y.CreatedAt).ThenBy(y => y.Id),
+                SortYeets.LIKES => yeetsQuery.OrderBy(y => y.Likes).ThenBy(y => y.Id),
+                SortYeets.TAG => yeetsQuery.OrderBy(y => y.Tags).ThenBy(y => y.Id),
+                _ => throw new ArgumentOutOfRangeException()
+            },
             SortDirection.DSC => input.Sorting switch
             {
                 SortYeets.ID => yeetsQuery.OrderByDescending(y => y.Id),
@@ -79,17 +84,17 @@ public class YeetRepository
 
     public async Task<YeetResult> ReadYeet(YeetInput input)
     {
-        var yeet = await ReadGraphqlYeet(input.YeetId); 
+        var yeet = await ReadGraphqlYeet(input.YeetId);
         return new YeetResult(yeet);
     }
 
     public async Task<FeedResult> ReadFeed(FeedInput input)
     {
         var following = (await _userRepository.Read(input.UserId))?.Following.Select(u => u.FollowingId).ToList();
-        if(following is null || following.Count < 1)
+        if (following is null || following.Count < 1)
             return new FeedResult(new List<Graphql.Types.Yeet>(), 0);
 
-        var yeetsQuery = PreparedStatement() 
+        var yeetsQuery = PreparedStatement()
             .Where(yeet => following.Contains(yeet.UserId))
             .OrderByDescending(y => y.CreatedAt)
             .Skip(input.Offset)
@@ -107,7 +112,10 @@ public class YeetRepository
     public async Task<Graphql.Types.Yeet?> ReadGraphqlYeet(int id)
     {
         var yeet = await PreparedStatement().FirstOrDefaultAsync(y => y.Id == id);
-        if (yeet is null) { return null; }
+        if (yeet is null)
+        {
+            return null;
+        }
 
         return _mapper.mapFrom(yeet);
     }
