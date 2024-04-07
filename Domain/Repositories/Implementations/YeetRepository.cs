@@ -44,6 +44,8 @@ public class YeetRepository
 
         if (input.Tags is not null && input.Tags.Any())
             yeetsQuery = yeetsQuery.Where(u => u.Tags.Any(t => input.Tags.Contains(t.TagId)));
+        
+        var count = await yeetsQuery.CountAsync();
 
         yeetsQuery = input.Direction switch
         {
@@ -70,7 +72,6 @@ public class YeetRepository
 
         yeetsQuery = yeetsQuery.Skip(input.Offset).Take(input.Limit);
 
-        var count = await yeetsQuery.CountAsync();
         var yeets = await yeetsQuery.ToListAsync();
 
         return new YeetsResult(yeets.Select(y => _mapper.mapFrom(y)).ToList(), count);
