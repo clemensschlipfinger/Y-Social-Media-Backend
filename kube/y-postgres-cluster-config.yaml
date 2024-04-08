@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: y-postgres-cluster-config
+data:
+  pooler-service: y-postgres-cluster-loadbalancer-service
+

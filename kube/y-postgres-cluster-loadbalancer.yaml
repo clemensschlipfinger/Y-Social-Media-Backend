@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: y-postgres-cluster-loadbalancer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: y-postgres-cluster-loadbalancer
+  template:
+    metadata:
+      labels:
+        app: y-postgres-cluster-loadbalancer
+    spec:
+      containers:
+      - name: pgpool
+        image: pgpool/pgpool
+        env:
+          - name: PGPOOL_PARAMS_BACKEND_HOSTNAME0
+            value: "y-postgres-cluster"
+          - name: PGPOOL_PARAMS_BACKEND_HOSTNAME1
+            value: "y-postgres-cluster-repl"
+          - name: PGPOOL_PARAMS_BACKEND_FLAG0
+            value: "ALWAYS_PRIMARY|DISALLOW_TO_FAILOVER"
+          - name: PGPOOL_PARAMS_BACKEND_FLAG1
+            value: "DISALLOW_TO_FAILOVER"
+          - name: PGPOOL_PARAMS_BACKEND_WEIGHT0
+            value: "1"
+          - name: PGPOOL_PARAMS_BACKEND_WEIGHT1
+            value: "2"
+          - name: PGPOOL_PARAMS_SR_CHECK_USER
+            value: "postgres"
+          - name: PGPOOL_PARAMS_SR_CHECK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres.y-postgres-cluster.credentials.postgresql.acid.zalan.do 
+                key: password
+          - name: PGPOOL_PARAMS_SSL
+            value: "true"
+        ports:
+         - containerPort: 9999

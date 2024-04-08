@@ -1,0 +1,32 @@
+apiVersion: acid.zalan.do/v1
+kind: postgresql
+metadata:
+  creationTimestamp: '2024-03-15T07:48:33Z'
+  generation: 2
+  labels:
+    team: acid
+  name: y-postgres-cluster
+  namespace: default
+spec:
+  allowedSourceRanges: []
+  databases:
+    'y': user
+  numberOfInstances: 3
+  postgresql:
+    version: '15'
+  resources:
+    limits:
+      cpu: 500m
+      memory: 500Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+  teamId: acid
+  users:
+    user: []
+  volume:
+    iops: 3000
+    size: 10Gi
+    throughput: 125
+status:
+  PostgresClusterStatus: Updating

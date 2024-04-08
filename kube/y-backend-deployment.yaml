@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: y-backend
+  name: y-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: y-backend
+  template:
+    metadata:
+      labels:
+        app: y-backend
+    spec:
+      containers:
+        - image: trueberryless/y-backend 
+          name: y-backend
+          env:
+            - name: POSTGRES__PASSWORD 
+              valueFrom:
+                secretKeyRef:
+                  name: user.y-postgres-cluster.credentials.postgresql.acid.zalan.do 
+                  key: password
+            - name: POSTGRES__USERNAME
+              value: user
+            - name: POSTGRES__DATABASE
+              value: "y"
+            - name: POSTGRES__SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: y-postgres-cluster-config
+                  key: pooler-service
+          ports:
+            - containerPort: 80
+      restartPolicy: Always

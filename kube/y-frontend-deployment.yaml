@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: y-frontend
+  name: y-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: y-frontend
+  template:
+    metadata:
+      labels:
+        app: y-frontend
+    spec:
+      containers:
+        - image: y-frontend:dev
+          name: y-frontend
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: api-config
+              mountPath: /usr/share/nginx/html/assets/config.json
+              subPath: config.json
+              readOnly: true
+      restartPolicy: Always
+
+      volumes:
+      - name: api-config
+        configMap:
+          name: y-frontend-config
