@@ -6,7 +6,7 @@ metadata:
   labels:
     team: acid
   name: y-postgres-cluster
-  namespace: default
+  namespace: y-social
 spec:
   allowedSourceRanges: []
   databases:
